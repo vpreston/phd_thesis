@@ -1,0 +1,203 @@
+\def\blue#1{\textcolor{blue}{{#1}}}
+\newcommand{\VP}[1]{\textit{\color{blue} VP: #1}}
+\newcommand{\td}[1]{\textbf{\color{red} [TODO: #1]}}
+
+% -----------------------------------------------------------------------------
+% POMDP models
+% -----------------------------------------------------------------------------
+\newcommand{\A}{\mathcal{A}} % set of actions
+\newcommand{\Ss}{\mathcal{S}} % set of states
+\newcommand{\Zz}{\mathcal{Z}} % set of observations
+
+% -----------------------------------------------------------------------------
+% Trajectory optimization
+% -----------------------------------------------------------------------------
+\newcommand{\G}{\mathcal{G}} % the trajectory generator object
+
+% -----------------------------------------------------------------------------
+% PHUMES
+% -----------------------------------------------------------------------------
+\newcommand{\x}{\mathbf{x}} % the unknown parameters
+\newcommand{\f}{f} % the numerical model
+
+% -----------------------------------------------------------------------------
+% Stylized Acronyms
+% -----------------------------------------------------------------------------
+\newcommand{\PHORTEX}{\textsc{Phortex}\xspace}
+\newcommand{\phortex}{\textbf{PH}ysically-informed \textbf{O}perational \textbf{R}obotic \textbf{T}rajectories for \textbf{EX}peditions\xspace}
+\newcommand{\PHUMES}{\textsc{Phumes}\xspace}
+\newcommand{\phumes}{\textbf{PH}ysically-informed \textbf{U}ncertainty \textbf{M}odels for \textbf{E}nvironment \textbf{S}patiotemporality}
+\newcommand{\Sentry}{\emph{Sentry}\xspace}
+\newcommand{\POMDP}{\textcs{Pomdp}\xspace}
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Mathematical sets
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\def\reals{\mathbb{R}} % Real number symbol
+\def\R{\mathbb{R}}
+\def\integers{\mathbb{Z}} % Integer symbol
+\def\Z{\mathbb{Z}}
+\def\rationals{\mathbb{Q}} % Rational numbers
+\def\Q{\mathbb{Q}}
+\def\naturals{\mathbb{N}} % Natural numbers
+\def\N{\mathbb{N}}
+\def\complex{\mathbb{C}} % Complex numbers
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Special symbols
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\def\<{\left\langle} % Angle brackets
+\def\>{\right\rangle}
+
+\def\iff{\Leftrightarrow}
+%\def\choose#1#2{\left(\begin{array}{c}{#1} \\ {#2}\end{array}\right)}
+\def\chooses#1#2{{}_{#1}C_{#2}}
+\def\defeq{\triangleq} % defined equal to
+\newcommand{\bs}{\backslash} % backslash
+\def\half{\frac{1}{2}}
+\def\textint{{\textstyle\int}} % Sum in textstyle form
+\def\texthalf{{\textstyle\frac{1}{2}}}
+\newcommand{\textfrac}[2]{{\textstyle\frac{#1}{#2}}}
+
+% Semidefinite orders
+\newcommand{\psdle}{\preccurlyeq}
+\newcommand{\psdge}{\succcurlyeq}
+\newcommand{\psdlt}{\prec}
+\newcommand{\psdgt}{\succ}
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Vectors and matrices
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\newcommand{\boldone}{\mbf{1}} % Bold 1
+\newcommand{\boldzero}{\mbf{0}} % Bold 1
+\def\v#1{\mbi{#1}} % Vector notation
+\newcommand{\norm}[1]{\left\|{#1}\right\|} % A norm with 1 argument
+\newcommand{\onenorm}[1]{\norm{#1}_1} % L1 norm
+\newcommand{\twonorm}[1]{\norm{#1}_2} % L2 norm
+\newcommand{\infnorm}[1]{\norm{#1}_{\infty}} % Linfty norm
+\newcommand{\dualnorm}[1]{\norm{#1}_{*}} % Dual norm
+\newcommand{\pnorm}[1]{\norm{#1}_{p}} % p norm
+\newcommand{\qnorm}[1]{\norm{#1}_{q}} % Dual norm for p norm
+\newcommand{\opnorm}[1]{\norm{#1}_{\mathrm{op}}} % Operator norm
+\newcommand{\fronorm}[1]{\norm{#1}_{F}} % Frobenius norm
+\def\staticnorm#1{\|{#1}\|} % A static norm that does not resize with input
+\newcommand{\statictwonorm}[1]{\staticnorm{#1}_2} % L2 norm
+\newcommand{\inner}[2]{\langle{#1},{#2}\rangle} % Inner product
+\newcommand{\binner}[2]{\left\langle{#1},{#2}\right\rangle} % Inner product with
+\newcommand{\locnorm}[2]{\norm{#1}_{#2}} % Inner product
+\def\what#1{\widehat{#1}}
+
+\def\twovec#1#2{\left[\begin{array}{c}{#1} \\ {#2}\end{array}\right]}
+\def\threevec#1#2#3{\left[\begin{array}{c}{#1} \\ {#2} \\ {#3} \end{array}\right]}
+\def\nvec#1#2#3{\left[\begin{array}{c}{#1} \\ {#2} \\ \vdots \\ {#3}\end{array}\right]} % An n-vector with three arguments
+
+% ------------------------------------------------------------------------
+% Eigenvalues
+% ------------------------------------------------------------------------
+\def\maxeig#1{\lambda_{\mathrm{max}}\left({#1}\right)}
+\def\mineig#1{\lambda_{\mathrm{min}}\left({#1}\right)}
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Operators
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\def\Re{\operatorname{Re}} % Real part
+\def\indic#1{\mbb{I}\left[{#1}\right]} % Indicator function
+\def\staticindic#1{\mbb{I}[{#1}]} % Indicator function
+\def\logarg#1{\log\left({#1}\right)} % log with argument
+\def\polylog{\operatorname{polylog}}
+\def\maxarg#1{\max\left({#1}\right)} % max with argument
+\def\minarg#1{\min\left({#1}\right)} % min with argument
+\def\E{\mbb{E}} % Expectation symbol
+\def\Earg#1{\E\left[{#1}\right]}
+\def\Esub#1{\E_{#1}}
+\def\Esubarg#1#2{\E_{#1}\left[{#2}\right]}
+\def\bigO#1{\mathcal{O}(#1)} % big-oh notation
+\def\littleO#1{o(#1)} % big-oh notation
+\def\P{\mbb{P}} % Probability symbol
+\def\Parg#1{\P\left({#1}\right)}
+\def\Psubarg#1#2{\P_{#1}\left[{#2}\right]}
+\def\Trarg#1{\Tr\left[{#1}\right]} % Trace with argument
+\def\trarg#1{\tr\left[{#1}\right]} % trace with argument
+\def\Var{\mrm{Var}} % Variance symbol
+\def\Vararg#1{\Var\left[{#1}\right]}
+\def\Varsubarg#1#2{\Var_{#1}\left[{#2}\right]}
+\def\Cov{\mrm{Cov}} % Covariance symbol
+\def\Covarg#1{\Cov\left[{#1}\right]}
+\def\Covsubarg#1#2{\Cov_{#1}\left[{#2}\right]}
+\def\Corr{\mrm{Corr}} % Covariance symbol
+\def\Corrarg#1{\Corr\left[{#1}\right]}
+\def\Corrsubarg#1#2{\Corr_{#1}\left[{#2}\right]}
+\newcommand{\info}[3][{}]{\mathbb{I}_{#1}\left({#2};{#3}\right)} % Information symbol
+%\renewcommand{\exp}[1]{\operatorname{exp}\left(#1\right)} % Exponential
+\newcommand{\staticexp}[1]{\operatorname{exp}(#1)} % An exponential with parens that do not resize with input
+\newcommand{\loglihood}[0]{\mathcal{L}} % log likelihood
+\DeclareMathOperator*{\truemax}{max} % Jan Hlavacek
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Distributions
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\newcommand{\Gsn}{\mathcal{N}}
+\newcommand{\BeP}{\textnormal{BeP}}
+\newcommand{\Ber}{\textnormal{Ber}}
+\newcommand{\Bern}{\textnormal{Bern}}
+\newcommand{\Bet}{\textnormal{Beta}}
+\newcommand{\Bin}{\textnormal{Bin}}
+\newcommand{\BP}{\textnormal{BP}}
+\newcommand{\Dir}{\textnormal{Dir}}
+\newcommand{\Expo}{\textnormal{Expo}}
+\newcommand{\Gam}{\textnormal{Gamma}}
+\newcommand{\HypGeo}{\textnormal{HypGeo}}
+\newcommand{\Mult}{\textnormal{Mult}}
+\newcommand{\NegMult}{\textnormal{NegMult}}
+\newcommand{\Poi}{\textnormal{Poi}}
+\newcommand{\Pois}{\textnormal{Pois}}
+\newcommand{\Unif}{\textnormal{Unif}}
+
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Derivative symbols
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\newcommand{\grad}{\nabla} % gradient
+\newcommand{\Hess}{\nabla^2} % Hessian
+\newcommand{\lapl}{\triangle} % Laplace operator / Laplacian
+\newcommand{\deriv}[2]{\frac{d #1}{d #2}} % derivative
+\newcommand{\pderiv}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Probability and statistics macros
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\newcommand{\eqdist}{\stackrel{d}{=}}
+\newcommand{\todist}{\stackrel{d}{\to}}
+\newcommand{\toprob}{\stackrel{p}{\to}}
+\def\KL#1#2{\textnormal{KL}({#1}\Vert{#2})}
+\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern4mu{#1#2}}}
+%\def\indep{\perp\!\!\!\perp} % conditional independence
+\newcommand{\iid}{\textrm{i.i.d.}\xspace}
+\newcommand{\dist}{\sim}
+\newcommand{\distiid}{\overset{\textrm{\tiny\iid}}{\dist}}
+\newcommand{\distind}{\overset{\textrm{\tiny\textrm{indep}}}{\dist}}
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+% Optimization macros
+%-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+\newcommand{\subdiff}{\partial} % subdifferential
+\providecommand{\esssup}{\mathop\mathrm{ess\,sup}}
+\providecommand{\argmax}{\mathop\mathrm{arg max}} % Defining math symbols
+\providecommand{\argmin}{\mathop\mathrm{arg min}}
+\providecommand{\arccos}{\mathop\mathrm{arccos}}
+\providecommand{\dom}{\mathop\mathrm{dom}}
+\providecommand{\diag}{\mathop\mathrm{diag}}
+\providecommand{\tr}{\mathop\mathrm{tr}}
+\providecommand{\abs}{\mathop\mathrm{abs}}
+\providecommand{\card}{\mathop\mathrm{card}}
+\providecommand{\sign}{\mathop\mathrm{sign}}
+\providecommand{\conv}{\mathop\mathrm{conv}} % Convex hull
+\def\rank#1{\mathrm{rank}({#1})}
+\def\supp#1{\mathrm{supp}({#1})}
+
+\providecommand{\minimize}{\mathop\mathrm{minimize}}
+\providecommand{\maximize}{\mathop\mathrm{maximize}}
+\providecommand{\subjectto}{\mathop\mathrm{subject\;to}}
+
+%\renewcommand\eqref[1]{Eq.~(\ref{#1})}
+
+\def\openright#1#2{\left[{#1}, {#2}\right)}
