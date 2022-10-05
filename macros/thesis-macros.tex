@@ -10,11 +10,6 @@
 \newcommand{\Zz}{\mathcal{Z}} % set of observations
 
 % -----------------------------------------------------------------------------
-% Trajectory optimization
-% -----------------------------------------------------------------------------
-\newcommand{\G}{\mathcal{G}} % the trajectory generator object
-
-% -----------------------------------------------------------------------------
 % PHUMES
 % -----------------------------------------------------------------------------
 \newcommand{\x}{\mathbf{x}} % the unknown parameters
@@ -101,19 +96,19 @@
 % Operators
 %-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 \def\Re{\operatorname{Re}} % Real part
-\def\indic#1{\mbb{I}\left[{#1}\right]} % Indicator function
-\def\staticindic#1{\mbb{I}[{#1}]} % Indicator function
+\def\indic#1{\mathbb{I}\left[{#1}\right]} % Indicator function
+\def\staticindic#1{\mathbb{I}[{#1}]} % Indicator function
 \def\logarg#1{\log\left({#1}\right)} % log with argument
 \def\polylog{\operatorname{polylog}}
 \def\maxarg#1{\max\left({#1}\right)} % max with argument
 \def\minarg#1{\min\left({#1}\right)} % min with argument
-\def\E{\mbb{E}} % Expectation symbol
+\def\E{\mathbb{E}} % Expectation symbol
 \def\Earg#1{\E\left[{#1}\right]}
 \def\Esub#1{\E_{#1}}
 \def\Esubarg#1#2{\E_{#1}\left[{#2}\right]}
 \def\bigO#1{\mathcal{O}(#1)} % big-oh notation
 \def\littleO#1{o(#1)} % big-oh notation
-\def\P{\mbb{P}} % Probability symbol
+\def\P{\mathbb{P}} % Probability symbol
 \def\Parg#1{\P\left({#1}\right)}
 \def\Psubarg#1#2{\P_{#1}\left[{#2}\right]}
 \def\Trarg#1{\Tr\left[{#1}\right]} % Trace with argument
@@ -132,6 +127,7 @@
 \newcommand{\staticexp}[1]{\operatorname{exp}(#1)} % An exponential with parens that do not resize with input
 \newcommand{\loglihood}[0]{\mathcal{L}} % log likelihood
 \DeclareMathOperator*{\truemax}{max} % Jan Hlavacek
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
 
 %-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % Distributions
@@ -152,7 +148,7 @@
 \newcommand{\Poi}{\textnormal{Poi}}
 \newcommand{\Pois}{\textnormal{Pois}}
 \newcommand{\Unif}{\textnormal{Unif}}
-
+\newcommand{\Gen}{\mathcal{G}} % the trajectory generator object
 
 %-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 % Derivative symbols
@@ -173,7 +169,6 @@
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern4mu{#1#2}}}
 %\def\indep{\perp\!\!\!\perp} % conditional independence
 \newcommand{\iid}{\textrm{i.i.d.}\xspace}
-\newcommand{\dist}{\sim}
 \newcommand{\distiid}{\overset{\textrm{\tiny\iid}}{\dist}}
 \newcommand{\distind}{\overset{\textrm{\tiny\textrm{indep}}}{\dist}}
 %-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
