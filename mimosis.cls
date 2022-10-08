@@ -154,7 +154,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \RequirePackage{setspace}
-\onehalfspacing
+\doublespacing
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Tables
@@ -288,8 +288,8 @@
   urlcolor   = RoyalBlue,
   unicode,
   pdftex,
-  pdfauthor={YOUR NAME},
-  pdftitle={YOUR TITLE},
+  pdfauthor={Victoria Preston},
+  pdftitle={YOU TITLE},
   pdfkeywords={YOUR KEYWORDS},
   pdfsubject={PhD Dissertation at the Massachusetts Institute of Technology and the Woods Hole Oceanographic Institution Joint Program in Oceanography/Applied Ocean Science & Engineering}
   ]{hyperref}
@@ -314,8 +314,8 @@
   uniquename   = false,
   hyperref     = true,
   sortcites    = true,
-  citestyle    = numeric-comp,
-  bibstyle     = ieee,
+  citestyle    = authortitle-icomp,
+  bibstyle     = nature,
   uniquelist   = false,
   ]{biblatex}
 

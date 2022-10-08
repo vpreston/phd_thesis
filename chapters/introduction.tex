@@ -1,5 +1,84 @@
 \chapter{Introduction}
 
-The environmental sciences are a multidisciplinary endeavor to understand the Earth, its ecosystems, and its processes, for which \emph{in situ} observational studies or \emph{expeditions} serve as the foundation on which scientific discovery and model development is predicated. Robots are uniquely well-positioned to advance long-term monitoring of and exploration in meso-scale planetary environments through autonomous expeditions. By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration). Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to predetermined hand-designed trajectories (e.g., uniform coverage lawnmowers \cite{camilli2010tracking}). This significantly restricts the class of phenomena that can be effectively studied by expeditionary scientific robots. For instance, spatiotemporal distributions---deep sea hydrothermal plumes, algal blooms, weather cells---can be severely under-sampled or missed using these strategies \cite{flaspohler2019information}. Given the ubiquity of these spatiotemporal phenomena and the cost of scientific field operations, it is critical to improve the efficacy of robots as autonomous scientific tools.
+% \begin{center}
+%     \begin{minipage}{0.5\textwidth}
+%       \begin{small}
+%         In which the reasons for creating this package are laid bare for the
+%         whole world to see and we encounter some usage guidelines.
+%       \end{small}
+%     \end{minipage}
+%     \vspace{0.5cm}
+% \end{center}
 
-This thesis represents\dots
+\noindent The environmental sciences are a multidisciplinary endeavor to understand the Earth, its ecosystems, and its processes, for which \emph{in situ} observational studies or \emph{expeditions} serve as the foundation on which scientific discovery and model development is predicated.
+Robots are uniquely well-positioned to advance long-term monitoring of and exploration in meso-scale planetary environments through autonomous expeditions.
+By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration).
+Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories, e.g., uniform coverage lawnmowers~\autocite{camilli2010tracking}.
+This restriction is often applied in order for trajectories to be rigorously checked by teams of science or engineering staff prior to execution as a policy of risk reduction, and for ease of supervision during execution.
+Operating without agency (i.e., nonadaptively) necessarily restricts the class of phenomena that can be effectively studied by expeditionary scientific robots.
+For instance, spatiotemporal distributions---deep sea hydrothermal plumes, algal blooms, weather cells---can be severely under-sampled or missed using nonadaptive strategies~\autocite{flaspohler2019information}.
+Given the ubiquity of spatiotemporal phenomena and the cost of scientific field operations, it is critical to improve the efficacy of robots as autonomous scientific tools and extend their capabilities.
+
+In this thesis, the challenges of performing informative sampling trajectories with expeditionary robots in spatiotemporal environments will be closely studied. 
+This research spans theoretical to practical challenges and considerations, and was performed in close collaboration with scientists and engineers in fields including oceaonography and geochemistry, computational statistics, robotics, and data science.
+Chief among the challenges addressed in this thesis is the problem of uncovering the underlying dynamics of a spatiotemporal distribution in a target environment.
+With access to a perfect physics model of an environment, trajectories for a robotic platform could be exactly produced for some sampling task.
+However, rarely (and arguably never) is such a perfect model of an environment available.
+Instead, there is considerable \emph{uncertainty} about the underlying form of the dynamics model~\footnote{Both epistemic and aleatoric. Aleatoric uncertainty in this case comes from the chaotic nature of spatiotemporal distributions (for instance, turbulent flows). Epistemic uncertainty is definitional, as we have uncertainty of the model.}
+To reduce uncertainty, roboticists and scientists alike typically turn to data; here in the form of \emph{in situ} observations.
+Unfortunately, data that can be collected in real field trials with mobile platforms tends to be noisy and extremely partially observable---that is, the observations are only at point locations (in time and space) and may be indirect measurements of a desired field of interest. 
+Practically, data-driven models trained with this type of data would require a huge number of samples in order to generalize a useful simulator for planning; a luxury that, in the field, is typically not afforded due to limited opportunities for deployments and finite mission timelines.
+
+The problem of discovering a useful forward simulator for a target environment is not impossible, however.
+Sophisticated numerical models of spatiotemporal systems (e.g., systems of partial differential equations or PDEs) have been defined over decades of scientific research.
+While many of these models are computationally intractable to compute in the field due to the time-horizon needed to be simulated and the size of the time-dependent three-dimensional volumes to be approximated, they yield useful scientific principles which can be informative.
+For instance, the concepts of non-divergence in flow fields and conservation of mass, and simplified models of time-averaged behaviors, can serve as an inductive bias for probabilistic data-driven models.
+Using \emph{physically-informed structure} reduces the burden on the data alone for recovery of a dynamics model.
+Depending on the application of this structure, it can additionally yield models that are readily interpretable by science experts (as the targets of inference may be scientifically meaningful quantities) or are themselves beholden to universal principles (such as conservation of mass).
+As some in robotics may say, however, there is no free lunch.
+The use of physically-informed structure trades sample efficiency for increased computational costs (in comparison to purely data-driven techniques).
+However, this trade-off can be tuned to the underlying models available, the sampling task at hand, and the operational logistics during field opportunities.
+
+To embed scientific knowledge into probabilistic models for robot learning poses additional, necessary infrastructure.
+The observations that a robot collects must correspond to the internal representation used by the robot (known as it's belief).
+As scientific observations are typically taken by heterogeneous sensors with different operating principles and measuring different phenomenon which may have complicated relationships, the choice of observation model is not straightforward.
+Indeed, modern scientific research rests on the interpretation \emph{in situ} observations.
+While it is out of scope to assume that a roboticist become a domain expert in order to plan useful trajectories, familiarity with the forms, limitations, and working principles of critical science infrastructure may be necessary in order to make advances in modeling and planning.
+This further implies that the development of expeditionary robotics cannot happen in a vacuum; collaboration with scientists who will ultimately use this technology must be undertaken.
+
+In addition to context-specific observation models, the planning architecture that utilizes a physically-informed model must be considered.
+Planning trajectories for expeditionary robots necessitates working under practical constraints.
+
+
+
+% Thus the crux of the challenge: data driven probabilistic models require too much data to tractably learn simple dynamics that can be exploited for trajectory design, but numerical approximations of underlying dynamics may be too computationally expensive and brittle to real data to use instead.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hydrothermal Plume Charting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hydrothermal Plume Charting}
+To ground the discussion and impact of this research, the context for deep-sea hydrothermal plume charting will serve as a basis for development.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Informative Path Planning
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Informative Path Planning in the Field}
+What makes up a robotic system doing useful work.
+
+\subsection{Perceiving}
+Discovering hydrothermalism, classifying examples, processing sensors, not having access to ground truth.
+
+\subsection{Predicting}
+Utilizing observations for forward simulate an environment to strategize. PHUMES and PIKL.
+
+\subsection{Planning}
+Overcoming operational challenges and working within the framework of logistics at sea. Enabling decision-making not just by autonomous agents, but also by scientists/engineers.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Thesis Overview
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Thesis Overview}
+The contributions of this thesis are\dots
+
+The remainder of this thesis is organized as follows\dots
