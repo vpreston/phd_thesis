@@ -3,17 +3,15 @@
 % \begin{center}
 %     \begin{minipage}{0.5\textwidth}
 %       \begin{small}
-%         In which the reasons for creating this package are laid bare for the
-%         whole world to see and we encounter some usage guidelines.
+%         How inappropriate to call this planet Earth when it is quite clearly Ocean.\\ \emph{Arthur C. Clarke}
 %       \end{small}
 %     \end{minipage}
 %     \vspace{0.5cm}
 % \end{center}
 
-The environmental sciences are a multidisciplinary endeavor to understand the Earth, its ecosystems, and its processes, for which \emph{in situ} observational studies or \emph{expeditions} serve as the foundation on which scientific discovery and model development is predicated.
+The environmental sciences are a multidisciplinary endeavor to understand the Earth, its ecosystems, and its processes, for which \emph{in situ} observational studies or \emph{expeditions} serve as the foundation on which scientific discovery and model development are predicated.
 Robots are uniquely well-positioned to advance long-term monitoring of and exploration in meso-scale~\footnote{tens of meters to several kilometers} planetary environments through autonomous expeditions.
-By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration).
-Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories, e.g., uniform coverage lawnmowers~\autocite{camilli2010tracking}.
+By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration). Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories, e.g., uniform coverage lawnmowers~\autocite{camilli2010tracking}.
 This restriction is often applied in order for trajectories to be rigorously checked by teams of science or engineering staff prior to execution as a policy of risk reduction, and for ease of supervision during execution.
 Operating without agency (i.e., nonadaptively) necessarily restricts the class of phenomena that can be effectively studied by expeditionary scientific robots.
 For instance, spatiotemporal distributions---deep sea hydrothermal plumes, algal blooms, weather cells---can be severely under-sampled or missed using nonadaptive strategies~\autocite{flaspohler2019information}.
@@ -30,11 +28,15 @@ Unfortunately, data that can be collected in real field trials with mobile platf
 Practically, data-driven models trained with this type of data would require a huge number of samples in order to generalize a useful simulator for planning; a luxury that, in the field, is typically not afforded due to limited opportunities for deployments and finite mission timelines.
 
 The problem of discovering a useful forward simulator for a target environment is not impossible, however.
-Sophisticated numerical models of spatiotemporal systems (e.g., systems of partial differential equations or PDEs) have been defined over decades of scientific research.
-While many of these models are computationally intractable to compute in the field due to the time-horizon needed to be simulated and the size of the time-dependent three-dimensional volumes to be approximated, they yield useful scientific principles which can be informative.
-For instance, the concepts of non-divergence in flow fields and conservation of mass, and simplified models of time-averaged behaviors, can serve as an inductive bias for probabilistic data-driven models.
-Using \emph{physically-informed structure} reduces the burden on the data alone for recovery of a dynamics model.
-Depending on the application of this structure, it can additionally yield models that are readily interpretable by science experts (as the targets of inference may be scientifically meaningful quantities) or are themselves beholden to universal principles (such as conservation of mass).
+Decades of research have been dedicated to the recovery of environmental models by experimental trials and mathematical reasoning via scientists' hands.
+For instance, the Navier-Stokes equations which describe the motion of viscous fluids are the results of Leonhard Euler, Claude-Louis Navier, and George Gabriel Stokes stretching from 1757 to 1850. 
+In this case, each mathematician started from the knowledge of their predecessor(s), and extended the sophistication of the model in turn.
+This is a natural scientific process, and it is a process that is well suited for algorithmic adaptation.
+The emergence of the field of scientific machine learning is some such evidence, as neural networks~\autocite{raissi2019physics, sapsis2009dynamically, mohan2019compressed}, Gaussian Processes (GPs)~\autocite{raissi2018numerical}, and similar representations~\autocite{kulkarni2019advection, brunton2016discovering} are developed which often leverage numerical scientific models or physical principles to approximately find novel forward simulators from relatively limited trajectory data in space-time.
+
+To extend this algorithmic theory to field settings in which computational time is typically severely limited and field observations are corrupted via noise, the foundational\footnote{and implicitly more straightforward or simpler to compute} principles of an assumed underlying dynamical model may still be an informative basis on which to learn.
+For instance, the concepts of non-divergence in flow fields and conservation of mass, and simplified models of time-averaged behaviors, can serve as an inductive bias\footnote{The term \emph{inductive bias} has a mixed connotation in learning. Designing an inductive bias will, definitionally, bias a learner towards the assumptions for unseen data. This is wonderful for an environmental context in which we're guaranteed to seeing things that were not in the original training data and for which grounded principles imply underlying structure, but in other contexts (particularly social and cultural), inductive bias in learned models may reflect and enforce systemically inappropriate or unconscious assumptions.} for probabilistic data-driven models.
+Using \emph{physically-informed structure} reduces the burden on the data alone for recovery of a dynamics model and can be equivalently be considered a means for identifying a reduced basis for inference.
 As some in robotics may say, however, there is no free lunch.
 The use of physically-informed structure trades sample efficiency for increased computational costs (in comparison to purely data-driven techniques).
 However, this trade-off can be tuned to the underlying models available, the sampling task at hand, and the operational logistics during field opportunities.
