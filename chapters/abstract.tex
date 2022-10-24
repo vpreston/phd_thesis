@@ -17,25 +17,38 @@
     \begin{singlespace}
     {\parindent0pt 
         {\large \textsc{Abstract}} \\ %less than 200 words for WHOI (350 for MIT)
-    
+
+        To better understand our ocean would be to better describe one of the largest ecosystems on planet Earth, better quantify the geochemical processes that control Earth's climate, and better regulate natural resources stored in it's depths.
+        \emph{Expeditionary science} is the art of collecting \emph{in situ} observations in a target environment so as to build approximate models of underlying environmental properties that move us towards better understanding.
+        By the nature of ocean research, robotic platforms are a dominant technology driving \emph{in situ} observations for expeditionary science in the deep sea.
+        Historically, depth-capable autonomous underwater vehicles (AUVs) have been used to perform simple surveying tasks in the deep ocean (e.g., bathymetric mapping) that can be fully pre-specified by human operators and which yield high-quality reconstructions of static fields.
+        However, there is urgency to utilize these platforms to generate rich data products of spatiotemporal distributions, such as chemical plumes.
+        To treat spatiotemporal distributions as static distributions for sample collection with the oceanic science fleet requires access to a dynamics model of the environment, over which trajectories can be optimally placed for a given task.
+        In general, perfect knowledge of the underlying distribution of a target environment is unattainable, and so must be inferred from observations.
+        As most \emph{in situ} scientific instruments yield point-measurements, considerable uncertainty is placed over the form of the dynamics due to extreme partial observability.
+        In this thesis, planning under uncertainty for robotic expeditionary science is addressed by embedding scientific knowledge as a strong inductive prior for tractable model learning.
+        Applied specifically to the problem of charting the spatiotemporal structure of deep-sea hydrothermal plumes, algorithmic contributions are presented which show how to \emph{perceive} plumes, \emph{predict} their state far into the future (e.g., multiple days), and \emph{plan} informative fixed trajectories.
+        Each chapter will discuss the technical and scientific implications of embedding scientific knowledge into algorithmic representations, grounding the discussion with results from field trials completed in November 2021 with AUV \emph{Sentry} at the Guaymas Basin, Gulf of California.\\ 
+        
+        
         % Context:
-        Transient, dynamic phenomena are of interest in many of the disciplines of observational science. \emph{Expeditionary science} encapsulates the observational sciences that require \emph{in situ} sample collection of environmental phenomena.
-        % Importance:
-        Taking physical measurements of the natural world and building accurate models from those observations is crucial to understanding a phenomenon and the spatiotemporal processes that drive it. Autonomous robots are especially well-suited to gathering those measurements efficiently.
-        % Challenge:
-        However, to collect useful observations of unknown, partially-observed spatiotemporal distributions for scientific inquiry requires accurately perceiving a phenomenon of interest, predicting how it will evolve in time, and planning effective sampling trajectories to put the robot in the right place at the right time, potentially under severe operational constraints.
-        % Intuition/Thesis Statement:
-        % In this thesis, the core challenges of \emph{extreme partial observability} and \emph{limited adaptive intelligence} are overcome by introducing methods embedded with domain scientific expertise to gain computational tractability with operating in the field.
-        Key to addressing these challenges is uncovering the underlying physics which describe phenomenon evolution.
-        This thesis establishes algorithmic contributions for computing tractable, probabilistic  solutions to inverse problems for long-horizon forward simulation of a target environment.
-        To do so, idealized scientific summaries of a given target environment for a particular task are formulated and embedded as strong inductive priors into learning frameworks suitable for use in robotic informative path planning.
-        % How Intuition was Applied:
-        To ground the algorithmic discussion, the problem of charting deep-sea hydrothermal plumes with a robot restricted to executing non-adaptive behaviors is used as a scientific and technical context for development.
-        As such, this thesis presents novel methods for detecting hydrothermal plumes from heterogeneous instruments, models for utilizing those observations to uncover and forward simulate plume dynamics, and a trajectory optimization strategy suitable for state-of-the-art expeditionary robots in deep-sea oceanographic research.
-        % Results:
-        Each chapter will discuss the technical and scientific implications of the proposed methods, drawing on results from a real field trial for mapping hydrothermal plumes with autonomous underwater vehicle (AUV) \emph{Sentry} in the Gulf of California at the Guaymas Basin in 2021.
-        % Impact:
-        The outcome of this thesis is an illustrative example of an autonomy system which extends the capabilities of expeditionary robots towards previously unattainable queries about dynamic phenomena.\\
+        % Transient, dynamic phenomena are of interest in many of the disciplines of observational science. \textit{Expeditionary science} encapsulates the observational sciences that require \textit{in situ} sample collection of environmental phenomena.
+        % % Importance:
+        % Taking physical measurements of the natural world and building accurate models from those observations is crucial to understanding a phenomenon and the spatiotemporal processes that drive it. Autonomous robots are especially well-suited to gathering those measurements efficiently.
+        % % Challenge:
+        % However, to collect useful observations of unknown, partially-observed spatiotemporal distributions for scientific inquiry requires accurately perceiving a phenomenon of interest, predicting how it will evolve in time, and planning effective sampling trajectories to put the robot in the right place at the right time, potentially under severe operational constraints.
+        % % Intuition/Thesis Statement:
+        % % In this thesis, the core challenges of \emph{extreme partial observability} and \emph{limited adaptive intelligence} are overcome by introducing methods embedded with domain scientific expertise to gain computational tractability with operating in the field.
+        % Key to addressing these challenges is uncovering the underlying physics which describe phenomenon evolution.
+        % This thesis establishes algorithmic contributions for computing tractable, probabilistic  solutions to inverse problems for long-horizon forward simulation of a target environment.
+        % To do so, idealized scientific summaries of a given target environment for a particular task are formulated and embedded as strong inductive priors into learning frameworks suitable for use in robotic informative path planning.
+        % % How Intuition was Applied:
+        % To ground the algorithmic discussion, the problem of charting deep-sea hydrothermal plumes with a robot restricted to executing non-adaptive behaviors is used as a scientific and technical context for development.
+        % As such, this thesis presents novel methods for detecting hydrothermal plumes from heterogeneous instruments, models for utilizing those observations to uncover and forward simulate plume dynamics, and a trajectory optimization strategy suitable for state-of-the-art expeditionary robots in deep-sea oceanographic research.
+        % % Results:
+        % Each chapter will discuss the technical and scientific implications of the proposed methods, drawing on results from a real field trial for mapping hydrothermal plumes with autonomous underwater vehicle (AUV) \emph{Sentry} in the Gulf of California at the Guaymas Basin in 2021.
+        % % Impact:
+        % The outcome of this thesis is an illustrative example of an autonomy system which extends the capabilities of expeditionary robots towards previously unattainable queries about dynamic phenomena.\\
     }
     
         \noindent Thesis Supervisor: Nicholas Roy \\
