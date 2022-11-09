@@ -3,7 +3,7 @@
 \begin{center}
     \begin{minipage}{0.5\textwidth}
       \begin{small}
-       It is a wholesome and necessary thing for us to turn again to the earth and in the contemplation of her beuaties to know the sense of wonder and humility.\\ \emph{Rachel Carson}
+       It is a wholesome and necessary thing for us to turn again to the earth and in the contemplation of her beauties to know the sense of wonder and humility.\\ \emph{Rachel Carson}
       \end{small}
     \end{minipage}
     \vspace{0.5cm}
@@ -16,39 +16,39 @@
 
 
 Life on Earth is inextricably entwined with its environment, and understanding the environment has been a human endeavor throughout history.
-The environmental sciences are the multidisciplinary, academic disciplines which aim to understand the Earth, its ecosystems, and its processes.
+The environmental sciences are the multidisciplinary, academic studies which aim to understand the Earth, its ecosystems, and its processes.
 Today with the aid of technology, environmental discovery has extended from the deepest trenches in the ocean to the uppermost atmosphere, and there is growing awareness of the complexity of life-sustaining processes which underlie the surface beauty. 
 
-Just as in the past so as is true today, \emph{in situ} observational studies, or \emph{expeditions}, serve as the foundation on which scientific discovery and model development are predicated in the environmental sciences.
-Traveling to and being present in an environment in order to collect physical samples or record first-hand observations is the gold standard by which studies are held.
+\emph{In situ} observational studies, or \emph{expeditions}, serve as the foundation on which scientific discovery and model development are predicated in the environmental sciences.
+Traveling to and being present in an environment to collect physical samples or record first-hand observations is the gold standard by which studies are held.
 The development of remote observational technologies (e.g., imaging satellites) has revolutionized the ability to collect e.g., global-scale datasets of climate, but has yet to have the spatial or temporal resolution to better \emph{in situ} analysis of many terrestrial systems\footnote{Indeed, many remote instruments require \emph{in situ} observations for calibration anyway.}, and they fully fail to resolve underwater or subterranean domains. 
 
 % The environmental sciences are a multidisciplinary endeavor to understand the Earth, its ecosystems, and its processes, for which \emph{in situ} observational studies or \emph{expeditions} serve as the foundation on which scientific discovery and model development are predicated.
-Robots are uniquely well-positioned to advance long-term monitoring of and exploration in meso-scale\footnote{tens of meters to several kilometers} planetary environments through autonomous expeditions.
-By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration). Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories, e.g., uniform coverage lawnmowers~\autocite{camilli2010tracking}.
+Robots are uniquely well-positioned to advance long-term monitoring of and exploration in mesoscale\footnote{Tens of meters to several kilometers} planetary environments through autonomous expeditions.
+By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration). Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories such as uniform coverage lawnmowers~\autocite{camilli2010tracking}.
 This restriction is often applied in order for trajectories to be rigorously checked by teams of science or engineering staff prior to execution as a policy of risk reduction, and for ease of supervision during execution.
-Operating without agency (i.e., nonadaptively) necessarily restricts the class of phenomena that can be effectively studied by expeditionary scientific robots.
+Operating without agency (i.e., nonadaptive) necessarily restricts the class of phenomena that can be effectively studied by expeditionary scientific robots.
 For instance, spatiotemporal distributions---deep sea hydrothermal plumes, algal blooms, weather cells---can be severely under-sampled or missed using nonadaptive strategies~\autocite{flaspohler2019information}.
 Given the ubiquity of spatiotemporal phenomena and the cost of scientific field operations, it is critical to improve the efficacy of robots as autonomous scientific tools and extend their capabilities.
 
 In this thesis, the challenges of performing informative sampling trajectories with expeditionary robots in spatiotemporal environments will be closely studied. 
-This research spans theoretical to practical challenges and considerations, and was performed in close collaboration with scientists and engineers in fields including oceaonography and geochemistry, computational statistics, robotics, and data science.
+This research spans practical to theoretical challenges and considerations, and was performed in close collaboration with scientists and engineers in fields including oceanography and geochemistry, computational statistics, robotics, and data science.
 Chief among the challenges addressed in this research is the problem of uncovering the underlying dynamics of a spatiotemporal distribution in a target environment.
 With access to a perfect physics model of an environment, trajectories for a robotic platform could be exactly produced for some sampling task.
 However, rarely (and arguably never) is such a perfect model of an environment available.
-Instead, there is considerable \emph{uncertainty} about the underlying form of the dynamics model\footnote{Both epistemic and aleatoric. Aleatoric uncertainty in this case comes from the chaotic nature of spatiotemporal distributions (for instance, turbulent flows). Epistemic uncertainty is definitional, as we have uncertainty of the model.}
+Instead, there is considerable \emph{uncertainty} about the underlying form of the dynamics model\footnote{Both epistemic and aleatoric. Aleatoric uncertainty in this case comes from the chaotic nature of spatiotemporal distributions (for instance, turbulent flows). Epistemic uncertainty is definitional, as we have uncertainty of the model and noisy observations.}
 To reduce uncertainty, roboticists and scientists both typically turn to data; here in the form of \emph{in situ} observations.
 Unfortunately, data that can be collected in real field trials with mobile platforms tends to be noisy and extremely partially observable---that is, the observations are only at point locations in time and space, and may be indirect measurements of a desired field of interest. 
-Practically, data-driven models trained with this type of data would require a huge number of samples in order to generalize a useful simulator for planning; a luxury that, in the field, is typically not afforded due to limited opportunities for deployments and finite mission timelines.
+Consequently, data-driven models trained with this type of input would require a huge number of samples in order to generalize a useful simulator for planning; a luxury that, in the field, is typically not afforded due to limited opportunities for deployments and finite mission timelines.
 
 The problem of discovering a useful forward simulator for a target environment is not impossible, however.
-Decades of research have been dedicated to the recovery of environmental models by experimental trials and mathematical reasoning via scientists.
+Decades of research have been dedicated to the recovery of environmental models by experimental trials and mathematical reasoning by scientists.
 For instance, the Navier-Stokes equations, which describe the motion of viscous fluids, are the philosophical, mathematical, and experimental results of Leonhard Euler, Claude-Louis Navier, and George Gabriel Stokes stretching from 1757 to 1850. 
 In this case, each mathematician started from the knowledge of their predecessor(s), and extended the sophistication of the model in turn.
 This is a natural scientific process, and it is a process that is well suited for algorithmic adaptation.
 The emergence of the field of scientific machine learning is some evidence, as neural networks~\autocite{raissi2019physics, sapsis2009dynamically, mohan2019compressed}, Gaussian Processes (GPs)~\autocite{raissi2018numerical}, and similar representations~\autocite{kulkarni2019advection, brunton2016discovering} are developed which often leverage numerical scientific models or physical principles to approximately find novel forward simulators from relatively limited trajectory data in space-time.
 
-To extend this algorithmic theory to field settings in which computational time is typically severely limited and field observations are corrupted via noise, the foundational\footnote{and implicitly more straightforward or simpler to compute} principles of an assumed underlying dynamical model may still be an informative basis on which to learn.
+To extend this algorithmic theory to field settings, in which computational time is typically severely limited and field observations are corrupted via noise, the foundational\footnote{And implicitly more straightforward or simpler to compute} principles of an assumed underlying dynamical model may still be an informative basis on which to learn.
 For instance, the concepts of non-divergence in flow fields and conservation of mass, and simplified models of time-averaged behaviors, can serve as an inductive bias\footnote{The term \emph{inductive bias} has a mixed connotation in learning. Designing an inductive bias will, definitionally, bias a learner towards the assumptions for unseen data. This is wonderful for an environmental context in which we're guaranteed to seeing things that were not in the original training data and for which grounded principles imply underlying structure, but in other contexts (particularly social and cultural), inductive bias in learned models may reflect and enforce systemically inappropriate or unconscious assumptions.} for probabilistic data-driven models.
 Using \emph{physically-informed structure} reduces the burden on the data alone for recovery of a dynamics model and the use of idealized analytical models can be considered a principled technique for identifying a reduced-basis for inference (rather than finding a latent space via the data directly).
 As some in robotics may say, however, there is no free lunch.
@@ -58,21 +58,21 @@ However, this trade-off can be tuned for the underlying models available, the sa
 In a field setting, embedding scientific knowledge into probabilistic models for robot learning requires additional, necessary algorithmic infrastructure. 
 In particular, the observations that a robot collects must correspond to the internal representation used by the robot (it's belief) with the science models embedded.
 As scientific observations are typically taken by heterogeneous sensors with different operating principles\footnote{And therefore may measure different phenomenon which may have complicated interrelationships.}, the choice of observation model is not straightforward.
-Indeed, modern scientific research rests on the interpretation \emph{in situ} observations.
+Indeed, modern scientific research rests on the interpretation of \emph{in situ} observations.
 While it is unreasonable to assume that a roboticist become a domain expert in a particular scientific field in order to plan useful trajectories\footnote{This is not to suggest that scientists could not become autonomy designers in the future of expeditionary robotics, however.}, familiarity with the forms, limitations, and working principles of critical science sensing infrastructure is necessary in order to make advances in modeling and planning.
 This further implies that the development of expeditionary robotics cannot happen in a vacuum; collaboration with scientists who will ultimately use this technology must be undertaken.
 
 Finally, the planning architecture that utilizes a physically-informed model must be considered.
 Planning trajectories for expeditionary robots must work under practical, operational constraints that can disrupt or inhibit the planning process.
 In the case that multi-hour missions need to be completely pre-specified and safety-checked by dedicated engineers, it is not unreasonable to need a plan computed hours in advance of a launch window. 
-If this launch window moves in the case of weather delays, for instance, just carrying out the plan as designed could lead to poor performance in sampling spatiotemporal distributions, as the plan was generated over forecasts timed for the original launch window.
-To account for this inevitability\footnote{inevitable, in that the unexpected is expected when in the field.} the plan that is designed must either be temporally invariant (which is algorothmically difficult to achieve), or easily modified, potentially by hand, to account for the changing conditions and avoiding a multi-hour long replanning-rechecking procedure.
+If this launch window moves in the event of weather delays, for instance, just carrying out the plan as designed could lead to poor performance in sampling spatiotemporal distributions, as the plan was generated over forecasts timed for the original launch window.
+To account for this inevitability\footnote{Inevitable, in that the unexpected is expected when in the field.} the plan that is designed must either be temporally invariant (which is algorithmically difficult to achieve), or easily modified, potentially by hand, to account for the changing conditions and avoiding a multi-hour long replanning-rechecking procedure.
 Easy modification can only be done if the model, and the resulting trajectory designed with this model, are fully interpretable and the trajectory can be truncated or extended to meet changing timing demands.
 
-This thesis presents the case for embedding scientific knowledge into the observation (\emph{perception}), belief (\emph{prediction}), and decison-making (\emph{planning}) frameworks of an autonomy system to tackle core challenges related to vehicle non-adaptivity, partial observability in spatiotemporal domains, and operational restrictions. 
-To ground the work, the specific expeditonary problem of deep-sea hydrothermal plume charting is closely analyzed, and a field deployment with autonomous underwater vehicle (AUV) \Sentry in the Guyamas Basin, Gulf of California is used to demonstrate the algorithmic contributions to be presented.
+This thesis presents the case for embedding scientific knowledge into the observation (\emph{perception}), belief (\emph{prediction}), and decision-making (\emph{planning}) frameworks of an autonomy system to tackle core challenges related to vehicle nonadaptivity, partial observability in spatiotemporal domains, and operational restrictions. 
+To ground the work, the specific expeditionary problem of deep-sea hydrothermal plume charting is closely analyzed, and a field deployment with autonomous underwater vehicle (AUV) \Sentry in the Guaymas Basin, Gulf of California is used to demonstrate the algorithmic contributions to be presented.
 Deep-sea hydrothermalism is the thermal and geochemical circulation of seawater driven by magmatic activity.
-Characterizing interaction between the magmatic layer, basaltic crust, and deep ocean biosphere is of contemporary interest with this thesis, as concerted interest in deep sea mining (for recovery of rare earth materials and metals) and deep carbon sequestration are hotly developing fields.
+Characterizing interaction between the magmatic layer, basaltic crust, and deep ocean biosphere is of contemporary interest with this thesis, as concerted efforts to pursue deep sea mining (for recovery of rare earth materials and metals) and deep carbon sequestration are hotly developing fields.
 Hydrothermalism plays a critical role in these processes, as a nutrient (and metals) pump, indicator for geological activity, and sustainer of unique ecosystems.
 To chart hydrothermal plumes means to survey the structure of the warm, nutrient-rich water that is ejected from vents on the seafloor.
 As plumes are subject to instantaneous turbulence, advective crossflows, and complex mixing, predicting the location of a plume from point observations poses a considerable challenge for planning trajectories for a nonadaptive robotic platform.
@@ -88,18 +88,18 @@ CLOSING PARAGRAPH
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Hydrothermalism in the Deep Ocean}
 \label{sec:charting-plumes}
-Hydrothermal vents in the ocean were first observed in 1977 at the Galapagos Rift~\autocite{corliss1979submarine}, and since have been discovered around the world and the subject of considerable geodynamical and biogeochemical study.
+Hydrothermal vents in the ocean were first observed in 1977 at the Galápagos Rift~\autocite{corliss1979submarine}, and since have been discovered around the world and the subject of considerable geodynamical and biogeochemical study.
 Seafloor venting sites, energized by magmatic sources, release fluids between 20-\SI{400}{\celsius} (background deep ocean temperatures are approximately \SI{2}{\celsius}) and imbued with minerals, metals, dissolved gases, and other compounds~\autocite{jannasch1985geomicrobiology, martin2008hydrothermal}.
 These warm, nutrient-pumping sites in the deep ocean have created oases for unique micro- and macro-fauna~\autocite{corliss1979submarine}, and the venting fluids, called plumes, can deposit minerals and metals over kilometer scales CITE.
 Detection and characterization of seafloor hydrothermal venting are critical for  understanding fundamental interactions between the deep ocean, its underlying basaltic crust, the deep biosphere, and (bio)geochemical fluxes.
 
 Contemporary to the writing of this thesis, increased political and economic interests in mining seafloor resources, and environmental interests in sequestering reclaimed carbon in the deep ocean, have put a cultural spotlight on hydrothermalism and the oceanic crust.
 Questions related to mineral and metal deposition from plumes highlight the acute scientific need to better study not just hydrothermal vents themselves, but the plume structures that are produced by them which are the primary drivers of nutrient injection in the deep ocean biosphere.
-Scientific studies that benefit from directly charting the spatiotemporal structure of a plume include those which characterize the transport and deposition of particulates, the distirbution and transport of biological materials (including microbes) in the deep ocean, and field-based statistical modeling of turbulent water mass mixing.
+Scientific studies that benefit from directly charting the spatiotemporal structure of a plume include those which characterize the transport and deposition of particulates, the distribution and transport of biological materials (including microbes) in the deep ocean, and field-based statistical modeling of turbulent water mass mixing.
 
 Arguably beginning with the Morton, Taylor, and Turner (MTT) model for buoyant plumes derived in the 1950s~\autocite{morton1956turbulent}, and the re-derivation specifically for hydrothermal plumes in the late 1980s by Speer and Rona~\autocite{speer1989model}, our understanding of hydrothermal plumes is largely based on laboratory experiments and sparse, corroborating field measurements.
 These idealized models describe a roughly two part plume structure composed of a buoyant stem and a neutrally-buoyant layer. 
-The buoyant stem is a spatially small expression that describes the fluid that rapidly rises from an originating vent orifice, largely driven by buoyant forces that result in the different in density between the warm ventint fluid and the ambient seawater.
+The buoyant stem is a spatially small expression that describes the fluid that rapidly rises from an originating vent orifice, largely driven by buoyant forces that result in the different in density between the warm venting fluid and the ambient seawater.
 The neutrally-buoyant (or equivalently non-buoyant) layer describes the spatially large spread of vent-derived fluids along the isopycnal of equal density with the ambient seawater\footnote{Readers are referred to~\autocite{yoerger2007autonomous} for an illustrative description and figure.}. 
 In subsequent studies, state-of-the-art hydrothermal plume models incorporate time-varying Navier-Stokes models and more complicated fluid structures\footnote{e.g.,~\autocite{lavelle2013turbulent,xu2012deep}}.
 Mathematically, these models describe what has been practically well-understood in observational studies: the spatiotemporal distribution of plumes is instantaneously complicated and on small scales (meters, minutes) driven by compounding, chaotic factors that are difficult to calibrate.
@@ -112,7 +112,7 @@ The complication of finely modeling hydrothermal plumes puts a fine point on the
 To chart hydrothermal plumes requires grappling with uncertainty over the underlying dynamics of a target environment due to the extreme partial observability of point \emph{in situ} measurements in a continuous three-dimensional volume over time influenced by complicated spatiotemporal dynamics of water mixing, tidal advection, and chaotic turbulence.
 The notion of uncertainty has implications for solving both the \emph{inverse} and \emph{forward} problem inherently posed in hydrothermal plume charting.
 Discovering the underlying model from a set of data, the inverse problem, is known to be ill-posed in spatiotemporal systems CITE, suggesting that the information content of every sample has an outsized effect on the accuracy of recovered dynamics.
-With a known dynamics model, forward simulating a model with uncertainty placed over initial conditions or descriptive parameters requires propogating that uncertainty forward.
+With a known dynamics model, forward simulating a model with uncertainty placed over initial conditions or descriptive parameters requires propagating that uncertainty forward.
 In time-dependent models, even modest amounts of uncertainty can accumulate quickly over short horizons CITE, yielding essentially uninformative predictive state estimates for planning.
 A principled treatment of uncertainty, particularly the identification of \emph{useful} uncertainty for planning, is necessary. 
 WORDS ON HOW PEOPLE HAVE THOUGHT ABOUT UNCERTAINTY IN HYDROTHERMAL SYSTEMS
