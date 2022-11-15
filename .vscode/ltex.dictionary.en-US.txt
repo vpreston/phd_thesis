@@ -1,0 +1,12 @@
+spatiotemporal
+aleatoric
+Aleatoric
+hydrothermalism
+Hydrothermalism
+nonadaptive
+crossflows
+nonadaptivity
+AUV
+mesoscale
+geodynamical
+isopycnal
