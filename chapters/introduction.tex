@@ -53,21 +53,19 @@ The use of physically-informed structure trades sample efficiency for increased 
 However, this trade-off can be tuned for the underlying models available, the sampling task at hand, and the operational logistics during field opportunities.
 
 In a field setting, embedding scientific knowledge into probabilistic models for robot or human decision-making requires additional, necessary algorithmic infrastructure. 
-In particular, the observations that a robot collects must correspond to the internal representation used by the robot (it's belief) with the science models embedded.
-As scientific observations are typically taken by heterogeneous sensors with different operating principles\footnote{And therefore may measure different phenomenon which may have complicated interrelationships.}, the choice of observation model is not straightforward.
+Surrounding a model there must be an observation model and a decision-maker/planner.
+The observations that a robot collects must correspond to the internal representation used by the robot (it's belief) with the science models embedded.
+As scientific observations are typically taken by heterogeneous sensors with different operating principles\footnote{And therefore may measure different phenomenon with complicated interrelationships.}, the choice of observation model is not straightforward.
 While it is unreasonable to assume that a roboticist become a domain expert in a particular scientific field in order to plan useful trajectories, familiarity with the forms, limitations, and working principles of critical science sensing infrastructure is necessary in order to make advances in modeling and planning.
-This further implies that the development of expeditionary robotics cannot happen in a vacuum; collaboration with scientists who will ultimately use this technology must be undertaken.
+It's a core tenant of this work that the development of expeditionary robotics cannot happen in a vacuum; collaboration with scientists who will ultimately use this technology must be undertaken.
 
+The decision-maker can be either a person (or a team of people), or an automated process (such as the robot itself). 
+To enable a decision-maker, the output of the probabilistic model must be interpretable by some means---either semantically for human-readability, or technically for automated optimization via the specification of a reward function.
+In any case, a decision-maker must work under often complicated and changing constraints in the field, which can disrupt or inhibit the planning process.
+For instance, in the case in which trajectories need to be computed hours before a planned deployment window of a robot, if that deployment window changes due to e.g., weather, the plans themselves must either be agnostic or flexible enough to adapt in response to the change within the updated timeframe set by engineering teams operating the vehicles.
+As computing universally good plans under any change of conditions is intractable, we must rely on more heuristic opportunities to design easily interpreted and modifiable plans (potentially by hand), to ultimately avoid a multi-hour long replanning-rechecking procedure.
 
-
-Finally, the planning architecture that utilizes a physically-informed model must be considered.
-Planning trajectories for expeditionary robots must work under practical, operational constraints that can disrupt or inhibit the planning process.
-In the case that multi-hour missions need to be completely pre-specified and safety-checked by dedicated engineers, it is not unreasonable to need a plan computed hours in advance of a launch window. 
-If this launch window moves in the event of weather delays, for instance, just carrying out the plan as designed could lead to poor performance in sampling spatiotemporal distributions, as the plan was generated over forecasts timed for the original launch window.
-To account for this inevitability\footnote{Inevitable, in that the unexpected is expected when in the field.} the plan that is designed must either be temporally invariant (which is algorithmically difficult to achieve), or easily modified, potentially by hand, to account for the changing conditions and avoiding a multi-hour long replanning-rechecking procedure.
-Easy modification can only be done if the model, and the resulting trajectory designed with this model, are fully interpretable and the trajectory can be truncated or extended to meet changing timing demands.
-
-This thesis presents the case for embedding scientific knowledge into the observation (\emph{perception}), belief (\emph{prediction}), and decision-making (\emph{planning}) frameworks of an autonomy system to tackle core challenges related to vehicle nonadaptivity, partial observability in spatiotemporal domains, and operational restrictions. 
+This thesis presents the case for embedding scientific knowledge into the observation model (\emph{perception}), belief representation (\emph{prediction}), and decision-making framework (\emph{planning}) of robotic operations in a science expedition to tackle core challenges related to vehicle nonadaptivity, partial observability in spatiotemporal domains, and operational restrictions. 
 To ground the work, the specific expeditionary problem of deep-sea hydrothermal plume charting is closely analyzed, and a field deployment with autonomous underwater vehicle (AUV) \Sentry in the Guaymas Basin, Gulf of California is used to demonstrate the algorithmic contributions to be presented.
 Deep-sea hydrothermalism is the thermal and geochemical circulation of seawater driven by magmatic activity.
 Characterizing interaction between the magmatic layer, basaltic crust, and deep ocean biosphere is of contemporary interest with this thesis, as concerted efforts to pursue deep sea mining (for recovery of rare earth materials and metals) and deep carbon sequestration are hotly developing fields.
@@ -75,7 +73,8 @@ Hydrothermalism plays a critical role in these processes, as a nutrient (and met
 To chart hydrothermal plumes means to survey the structure of the warm, nutrient-rich water that is ejected from vents on the seafloor.
 As plumes are subject to instantaneous turbulence, advective crossflows, and complex mixing, predicting the location of a plume from point observations poses a considerable challenge for planning trajectories for a nonadaptive robotic platform.
  
-CLOSING PARAGRAPH
+\paragraph{Contributions}
+The contributions of this thesis are...
 
 
 % Thus the crux of the challenge: data driven probabilistic models require too much data to tractably learn simple dynamics that can be exploited for trajectory design, but numerical approximations of underlying dynamics may be too computationally expensive and brittle to real data to use instead.
