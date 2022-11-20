@@ -1,21 +1,134 @@
 \chapter{Background and Related Work}
+\label{chap:related_work}
+\td{get JFR paper content integrated}
 
-\begin{itemize}
-    \item Defining Expedtionary Science
-    \item Deep Ocean Research Definition
-    \begin{itemize}
-        \item Hydrothermalism in the Deep Ocean
-        \item State of the Art Robots for Deep Ocean Research
-    \end{itemize}
-    \item Planning Under Uncertainty
-    \begin{itemize}
-        \item Informative Path Planning
-    \end{itemize}
-    \item Representations for Spatiotemporal Distributions
-    \begin{itemize}
-        \item Probabilistic: GPs, Bayesian Filters
-        \item Learned: NNs
-        \item Scientific Machine Learning: num GPs, PINNS
-        \item Numerical: models, NS, ODEs
-    \end{itemize}
-\end{itemize}
+The research presented in this thesis is built on foundational work in probabilistic and scientific modeling, robotic planning under uncertainty, and geochemistry in order to develop tools that can discover, simulate, and track hydrothermal plumes in the deep sea.
+\td{some nice general statements about how this chapter will present some of the core concepts important to appreciating and understanding the work herein}
+
+\section{Measuring and Modeling Environmental Spatiotemporal Distributions}
+\label{sec:measure_and_model}
+\td{really nice section like this in master's thesis -- adopt and expand here, particularly thinking about ocean contexts and models}
+
+\section{Informative Path Planning for Robotic Adaptive Sampling}
+\label{sec:ipp}
+Adaptive sampling is the art of collecting samples of some \emph{a priori} unknown function to strategically assist in the recovery of the unknown function or assist in performing a specific task by analysis of a previous history of observations. Informative path planning (IPP) is an approach for approximately solving adaptive sampling problems in a sequential decision-making setting under uncertainty (e.g., problems that can be defined as a POMDP as in \cref{chap:problem}) by approximating the reward of a task with an information-theoretic function to elicit exploration and exploitation behaviors while a robot is underway. Some common reward functions include the upper-confidence bound\autocite{agrawal1995sample,auer2002using,snoek2012practical}, probability of improvement\autocite{snoek2012practical,kushner1964new}, expected improvement\autocite{snoek2012practical,jones1998efficient}, and predictive entropy search\autocite{hennig2012entropy,hernandez2014predictive}. Canonical offline IPP techniques for pure information-gathering that optimize submodular (i.e., diminishing returns) coverage objectives can achieve near-optimal performance\autocite{Srinivas2012, binney2012branch}. Existing methods in IPP\footnote{e.g., \autocite{Hitz2017,hollinger2013sampling,flaspohler2019information,levine2010information,binney2012branch}}, the related field of experimental design and optimal sensor placement\footnote{e.g., \autocite{krause2008near,wang2019reinforcement}}, and general decision-making under uncertainty\footnote{e.g., \autocite{sunberg2018online, somani2013despot, kocsis2006bandit, Silver2010}} have demonstrated that sequential decision making can be applied to sample-collection scenarios in which online, adaptive behaviors are possible, the phenomenon of interest is static, and/or there is an opportunity to train the belief model from many trials and multiple sensors. Each of these typical scenarios is violated for the expeditionary science sampling problem---online adaptation is not possible, the phenomenon is dynamic, and there are very few total number of deployments for model training.
+
+% % In our formulation of the hydrothermal plume charting problem as a POMDP, our reward function is computed over the belief of the plume state, which is uncertain and represented probabilistically with \PHUMES. By its nature, a POMDP policy will balance exploration and exploitation, and so we define a simple ``exploitative'' reward function that directly encodes the desired scientific task. 
+% % Adaptive or online IPP techniques can make use of discrete state spaces \cite{Lim2016, Arora2017}, known metric maps \cite{singh2009nonmyopic, Jawaid2015}, unconstrained sensor placement \cite{Krause2008}, or nonmyopic sensor placement \cite{flaspohler2019information} in order to design trajectories through a potentially large state and vehicle space in order to gather useful observations. In this work, we optimize offline the placement of entire uniform coverage trajectories for a given deployment of \Sentry, and consider only a single deployment look-ahead at time of planning.
+
+% % In this work, we take an offline approach to informative path planning, and leverage the restriction of using uniform-coverage trajectory objects (e.g., lawnmowers) to relax the UCB reward function, setting $\beta$ to 0. This effectively creates a purely exploitative reward function, which is tempered by external restrictions to the set of actions the robot can take. Under a different set of action primitives or online decision-making, utilizing the full UCB reward, or any of the other typical probability measures, would be suitable. Moreover, the computation of these information measures is directly supported by the \PHUMES model class. 
+
+
+% % \begin{itemize}
+% %     \item Upper-Confidence Bound (UCB) \cite{agrawal1995sample,auer2002using,snoek2012practical} of the form $R_{\text{UCB}} = \mu(\mathbf{x}) + \sqrt{\beta}\sigma(\mathbf{x})$ which is the sum of predictive mean $\mu$ and variance $\sigma$ at queries $\mathbf{x}$. UCB is submodular \cite{nemhauser1978analysis}.
+% %     \item Probability of Improvement (PI) \cite{snoek2012practical,kushner1964new}; a probability measure of whether a query $\mathbf{x}$ will be better than the current best measurement $\mathbf{x}*$.
+% %     \item Expected Improvement (EI) \cite{snoek2012practical,jones1998efficient}; a measure of how much better a proposed query $\mathbf{x}$ will be compared to the current best measurement $\mathbf{x}*$.
+% %     \item Predictive Entropy Search (PES) \cite{hennig2012entropy,hernandez2014predictive}; a measure of the conditional entropy between a query $\mathbf{x}$ and a predicted optimizer of a distribution $f(\cdot)$, $\mathbf{x}*$.
+% % \end{itemize} 
+
+% % \subsection{Plume Hunting with Robots}
+% % \label{sec:plume_hunting}
+% % In the robotics literature, plume hunting has been equivalently styled as odor mapping, odor localization, source localization, and source seeking. In a large portion of these works, it is assumed that the source \emph{location} is unknown, and through partial observations of emitted gas/odor/plume, the source can be discovered using techniques that can be divided broadly into biologically-inspired heuristic search (e.g., \cite{reddy2022olfactory,chen2019odor}) or adaptive informative path planning (e.g., \cite{salam2019adaptive, jakuba2007stochastic}). Biologically-inspired or heuristic techniques draw (varying-levels of) inspiration from animal or insect behavior in olfactory settings. Such techniques typically include gradient-based algorithms like chemotaxis \cite{morse1998robust}, or bio-inspired algorithms that directly mimic a particular animal \cite{edwards2001representing}. These techniques are typically reactive and myopic, although they have been demonstrated to be relatively robust in open-world settings. In contrast, adaptive informative path planning can be nonmyopic, and typically attempts to embed knowledge (either heuristically or rigorously) about flow-fields (i.e., advection and diffusion) to assist in plume localization. Such techniques live on a spectrum, from algorithms that resemble biologically-inspired techniques like infotaxis \cite{vergassola2007infotaxis} to methods that use model order reduction techniques (like proper orthogonal decomposition) to encode complex numerical models (like the Navier-Stokes equations) and elucidate spatiotemporal structures in complex data \cite{peng2014dynamic}. Some examples of specifically localizing hydrothermal plumes are presented in \cite{jakuba2007stochastic,branch2020demonstration,wang20203,ferri2010novel}.
+
+% % In contrast to vent or source localization work, this paper aims to maximize samples collected throughout the structure of a moving plume in an offline information-gathering setting. Indeed, the plume source is generally known. Work that has used robots to map or chart plume-like structures has been presented as the ``front-tracking'' problem \cite{li2014multi}. In this problem, two water masses converge (say, at a river output into a bay), and the goal is to use a robotic vehicle to track the edge or intersection of these water masses using online adaptivity. With respect to tasking robots to stay within a particular water mass, most work has been conducted with multi-robot systems sharing distributed observations, and which identify key ``neighborhoods'' for further examination \cite{chen2019odor}. The importance of online decision-making in these schemes is essential to their efficacy; as far as these authors are aware, this paper is the first to attempt water mass tracking within an offline optimization strategy with a single agent.
+
+% \subsection{Bayesian Inference in POMDP Solvers}
+% \label{sec:bayesian_inference}
+% We define the hydrothermal plume charting problem as a POMDP and therefore need to select a belief representation which encodes the history of a robot's observations and the implications of those observations (and remaining uncertainty) over the explorable space. In approximate POMDP solvers, the choice of belief representation over the partially-observable state is critical for computing rewards and simulating possible actions and observations in decision-making. \PHUMES uses a Bayesian formulation, enabling inference over sets of unknown parameters informed by observations. A Bayesian inference problem takes the following general form: let $Z = \{z_0,...,z_{n-1}\}$ be a set of $n$ observed data points (possibly vector-valued), $X$ be the set of parameters that describe the data's distribution such that $z \sim \Pi(z | X)$, and $\alpha$ is a hyperparameter on the parameter distribution such that $X \sim \Pi(X | \alpha)$. Then the posterior distribution of the parameters given the data can be expressed as:
+
+% \begin{equation}
+%     \Pi(X | Z; \alpha) = \frac{\Pi(X, Z; \alpha)}{\Pi(Z;\alpha)} \propto \Pi(Z | X; \alpha)\Pi(X; \alpha)
+% \end{equation}
+
+% Practically, computing the posterior distribution exactly is computationally expensive or intractable due to the potentially large parameter space described by $X$, or complex and possibly hierarchical structure present between the observations and the parameter space. For the plume-charting problem, the Bayesian inference problem is posed as uncovering the state $\Ss$ defined with parameter vectors $\x_p, \x_c,$ and $\x_r$ from observations $\Zz$ collected according to observation model $O$. In this instance, the observations, which are filtered binary measurements at particular locations, are related to the plume parameters $\x_p$ and crossflow parameters $\x_c$ via the complex spatiotemporal dynamics of plume physics, which can be represented as a systems of partial differential equations (PDEs). 
+
+% To approximately solve Bayesian inference problems, several techniques can be employed, such as variational inference \citep{wainwright2002environmental}, Monte Carlo (MC) sampling \citep{mackay1998introduction}, or non-parametric model formulations \citep{Rasmussen2004}. Gaussian processes (GPs) are one form of non-parametric Bayesian model which has enjoyed considerable adoption in IPP (e.g., \cite{flaspohler2019information, guestrin2005near, Krause2008, Srinivas2012, luo2018adaptive, ouyang2014multi, wan2017reduced, ma2017informative, Marchant2014a}). However challenges remain in adopting GPs for nonstationary or otherwise complex (spatiotemporal) distributions as state-of-the-art kernels (e.g., \cite{singh2010modeling, garg2012learning, chen2022ak, raissi2018numerical}) may be difficult to train with the limited data available in a real field setting. In contrast, MC methods are particularly well suited for the Bayesian inference formulation we have posed for hydrothermal charting in \PHUMES, as distributions over a small set of physically-meaningful quantities can be easily defined and embedded in a numerical simulator during the sampling procedure. MC methods estimate the true posterior by drawing samples from a proposal density and evaluating those samples with respect to the posterior. In large, complex systems, it is difficult to define a single density that well-describes a target posterior, and so Markov chain MC (MCMC) methods draw samples from a proposal density which is conditioned on the previous sample drawn, and establishing an acceptance criteria to transition between states \cite{mackay1998introduction, green1995reversible, neal2011mcmc}. Since each new state relies on the density of the previous state in MCMC samplers, a ``burn-in'' period, in which a potentially large number of samples are drawn, is used before virtually independent samples are generated. MC methods will converge to the true estimator of the posterior for large numbers of samples \cite{mackay1998introduction}. In this paper, we make use of an MCMC procedure within our \PHUMES algorithm.
+
+
+% % As the plume-charting problem is an informative path planning (IPP) task, it is worth noting that nonparametric Bayesian models like Gaussian Processes (GPs) \cite{browne2012survey} have enjoyed considerable adoption in IPP (e.g., \cite{flaspohler2019information, guestrin2005near, Krause2008, Srinivas2012, luo2018adaptive, ouyang2014multi, wan2017reduced, ma2017informative, Marchant2014a}) to serve as the belief representation in POMDPs. GPs are attractive because they are relatively simply defined using a mean and covariance function (the latter of which encodes the ``relatedness'' of collected data with the inference target) and have a closed-form analytical update procedure. Unfortunately, challenges remain in adopting GPs for nonstationary and otherwise complex distributions present in realistic spatiotemporal environments. Recent work embedding numerical models into GP covariance kernels \cite{raissi2018numerical}, formulating general purpose nonstationary kernels \cite{singh2010modeling,garg2012learning, chen2022ak}, or utilizing learned latent spaces \cite{wilson2016deep} are promising areas for future adoption of GPs in spatiotemporal expeditionary IPP.
+
+
+
+% \subsection{Buoyant Plume Physics}
+% \label{sec:plume_models}
+% % \VP{I currently write out the equations that I think are most important to have about plume models, then nod to both more complicated and more generalized models. Is that the right balance? Should I more fully present each of the more complicated or more generalized models?}
+% Understanding the physics of plumes is fundamental to interpreting observations gathered during an AUV \Sentry deployment and using them to quickly learn and improve a forward simulation of plume. Hydrothermal plumes in the deep sea are typically characterized as buoyancy-driven water masses. On formation at a vent site, emitted fluids are significantly less dense than background seawater (by virtue of being super-heated, with some add-on effects by changes in chemical composition). This less dense water mass rises rapidly in the water column, forming a buoyant stem. As a rule of thumb, a buoyant stem grows in diameter about \SI{1}{\meter} for every \SI{10}{\meter} vertically travelled. Due to rapid cooling, turbulent mixing, and the natural stratification of ocean water, vent-derived fluids will reach a point of neutral-buoyancy with the background seawater. At this point, the plume forms a nonbuoyant or neutrally buoyant layer which spreads out across the isopycnal that describes the ocean layer of equivalent density. In the Atlantic basin, plume rise height is typically expected to be approximately 300-\SI{350}{\meter}; in the Pacific basin, this is 150-\SI{200}{\meter} \citep{speer1989model}. 
+
+% Generalized plume models which have been commonly incorporated in robotic source seeking literature include the Gaussian plume model \citep{green1980analytic} and the Gaussian puff model \citep{ludwig1977simplification}. These models primarily describe the dispersion envelope of aerosols released as a plume from a coherent source in the atmosphere, modeling the concentration of those aerosols directly as a Gaussian around a plume centerline describing the path of the plume in space. These models have largely been used to model ground pollution characteristics of smokestack-like sources in open, unstratified environments, and typically assume that the advective crossflow dominates plume movement. In the deep sea, stratified environments are the norm, and buoyancy forces are the primary advective force of plume fluids; however the ``Gaussian assumption'' is widely accepted by physical oceanographers, and we utilize this assumption within our \PHUMES framework. Specifically, we use deep-sea suitable formulations of plume centerline dynamics, and apply the Gaussian assumption to the terms that describe space-averaged fluid characteristics. This yields numerical descriptions of buoyant plume ``envelopes'' in which plume-derived fluid masses, on-average, will be observable under consistent environmental conditions in time. 
+
+% The buoyant-stem and neutrally-buoyant layer model of a hydrothermal plume has been mathematically codified perhaps most famously by \cite{morton1956turbulent} as a system of conservative equations (here for a stratified fluid) in cylindrical coordinates $(x, r)$ with the $x$-axis vertical with the vent source at the origin:
+
+% \begin{equation}
+%     \text{Volume: } \quad \frac{d}{dx}(b^2 u) = 2 b \alpha u
+% \end{equation}
+% \begin{equation}
+%     \text{Momentum: } \quad \frac{d}{dx}(b^2 u^2) = 2 b^2 g\frac{\rho_o - \rho}{\rho_1} 
+% \end{equation}
+% \begin{equation}
+%     \text{Density deficiency: } \quad \frac{d}{dx}\large(b^2 u g \frac{\rho_o - \rho}{\rho_1}\large) = 2 b^2 u \frac{g}{\rho_1}\frac{d\rho_o}{dx}
+% \end{equation}
+
+% where $\alpha$ is a proportionality coefficient which represents gross mixing (or entrainment) that occurs at the edge of a plume, $b = b(x)$ is the (symmetric) radius of the plume, $\rho = \rho(x, r)$ is density inside the plume, $\rho_o=\rho_o(x)$ is density outside of the plume, $\rho_1$ is some reference density such that $\rho_o(0) = \rho_1$, $g$ is acceleration due to gravity, and $u = u(x,r)$ is vertical velocity. These equations have been equivalently expressed in terms of mass, salt, heat, and momentum conservation by \cite{speer1989model} which usefully decomposes density into components of salinity and temperature that can be directly observed by scientific instruments.
+
+% In most environments, including the one we study in this article, advective crossflow is present. This crossflow ``bends'' a buoyant stem and reduces the effective rise height of the plume by introducing more aggressive mixing. To describe the plume shape under crossflow, we reformulate plume ascension through a weakly stratified water column into a modified cylindrical coordinate system as described in \cite{tohidi2016highly} and presented in \cref{sec:phumes}. 
+
+% Numerical models which describe instantaneous, complicated structure of plume phenomenon in time (e.g., \citealt{lavelle2013turbulent, xu2012deep}) have been developed which enhance these spatially-averaged models by directly modeling partial derivatives with respect to time, and incorporating additional dynamical models such as the Navier Stokes equations. Given the computational complexity of these models (on the order of a day on a high-performance computing node to compute a single instance of the evolution of a plume for a simulated hour), we instead focus on leveraging the comparatively simple and fast to compute idealized models described within \PHUMES. 
+% %We leave as future work opportunities to incorporate these more sophisticated models into expeditionary science missions and discuss further in \cref{sec:future}.
+
+% % \begin{equation}
+% %     \frac{dQ}{ds} = Q\sqrt{\frac{2(1+\lambda^2)}{M\lambda}}(\alpha|\frac{M}{Q} - U_a\cos\theta| + \beta|U_a\sin\theta|)
+% % \end{equation}
+% % \begin{equation}
+% %     \frac{dM}{ds} - U_a\cos\theta\frac{dQ}{ds} = \frac{FQ}{M}\sin\theta 
+% % \end{equation}
+% % \begin{equation}
+% %     U\sin\theta\frac{dQ}{ds} + M\frac{d\theta}{ds} = \frac{FQ}{M}\cos\theta
+% % \end{equation}
+% % \begin{equation}
+% %     \frac{dF}{ds} = -QN^2\sin\theta
+% % \end{equation}
+% % \begin{equation}
+% %     x_a = \int_0^s\cos\theta ds
+% % \end{equation}
+% % \begin{equation}
+% %     h_a = \int_0^s \sin\theta ds
+% % \end{equation}
+
+% % where $U_a = U_a(z)$ is the ambient crossflow velocity, $Q = Q(s,\theta)$ represents the plume specific volume flux, $M = M(s, \theta)$ is the specific momentum flux, $F = F(s, \theta)$ is specific buoyancy flux, $N$ is the Brunt-Vaisala frequency, $\lambda$ is the ratio of the minor and major axis that define the plume cross-sectional ellipse, $x_a$ and $h_a$ represents the Cartesian transform of $s$ and $\theta$ within the plume's frame of reference, and $\alpha$ and $\beta$ are vertical and horizontal entrainment coefficients. Indeed, the two key differences between this formulation and the formulation under no advective crossflow is the introduction of an additional mixing (entrainment) coefficient, and the tracking of volume, momentum, and buoyancy (density changes) fluxes horizontally under influence from this mixing. To convert abstract notions of buoyancy and momentum flux to directly observable/meaningful vent characteristics like vent area or fluid exit velocity, which are expressed naturally in the non-advective model, we can use the following relationships:
+
+% % \begin{equation}
+% %     Q_0 = \lambda u_0 \frac{A_0}{\pi}
+% % \end{equation}
+% % \begin{equation}
+% %     M_0 = Q_0 u_0
+% % \end{equation}
+% % \begin{equation}
+% %     F_0 = g10^{-4}(T-T_0)Q_0
+% % \end{equation}
+
+% % \noindent where $A_0$ is the vent area, $u_0$ is the initial fluid velocity leaving the vent, $T$ is the temperature of fluid at the vent, and $T_0$ is the temperature of ambient seawater at the depth of the vent (note that temperature is the dominant component of density, $\rho$, for deep sea hydrothermal plumes). Indeed, temperature, area, and exit velocity compose a sufficient set of parameters for representing the initial conditions of any particular plume and plume envelope calculation; these parameters, in addition to the mixing coefficients, form our set of $x_p$ in $\Ss$ in the plume-charting POMDP. $U_a$ and the global heading of the crossflow, $\Theta_a$ (not directly modeled in these equations), form the parameters in $x_c$ in $\Ss$.
+
+
+
+% %  This means that a vent of diameter \SI{0.5}{\meter} at the seafloor may produce a buoyant stem that only grows to a maximum of approximately \SI{30}{\meter} in horizontal size before reaching neutral buoyancy. With respect to the scale of typical survey areas of several thousand meters, hitting a buoyant stem by happenstance can be exceedingly difficult.
+
+
+% % \begin{itemize}
+% %     \item General: \begin{itemize}
+% %         \item chemotaxis/biological methods (source seeking)
+% %         \item POD methods (ultimately used in source-seeking)
+% %         \item informative GPs and IPP (Hitz, spatiotemporal kernels paper)
+% %     \end{itemize}
+% %     \item Hydrothermal plumes specifically: \begin{itemize}
+% %         \item infotaxis
+% %         \item informative occupancy grids (Jakuba)
+% %     \end{itemize}
+% %     \item What we're doing that's different: \begin{itemize}
+% %         \item we assume we know very little about anything (literally everything is invisible to us)
+% %         \item we assume we're not in a "steady-state" regime; our plume is moving in an unknown way on a global scale
+% %         \item we want to fly through all the parts of a plume, not just find the source (because that's actually the "solved" part of the problem at this point) \VP{honestly this is a HUGE difference. no one has an objective that is to map/track the plume. the forward prediction part of what we're doing is quite unique in the plume space}
+% %     \end{itemize}
+% % \end{itemize}
+
+% % Prior work in charting hydrothermalism has generally focused on source localization or discovery. Based on the magmatic budget hypothesis, hundreds of undiscovered vent sites are hypothesized to exist in the deep ocean \cite{beaulieu2015undiscovered} with implications for global nutrient and energy budgets, and novel ecosystems. Work conducted by [CITE] proposes methods for using autonomous underwater vehicle (AUV) surveys to estimate the location of a source by modeling upwind-downwind wafting effects. Still others propose biologically-inspired adaptive methods for using AUVs to trace wafting plume water to a source directly [CITE]. While vent discovery and characterization is a critical aspect of hydrothermal plume charting, little work has yet to examine how to study a plume \emph{in situ} given a known or hypothesized vent location. Hundreds of vents have been discovered and charted in the ocean, and some have been studied extensively at the seafloor. 
+

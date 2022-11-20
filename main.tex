@@ -25,27 +25,28 @@
 
 \begin{document}
 
-% no frontmatter b/c MIT wants consecutively Arabic numbered pages
+% no front matter b/c MIT wants consecutively Arabic numbered pages
 \mainmatter
   \include{chapters/cover}
   \include{chapters/abstract}
   % \include{chapter/forward}
   % \include{chapters/land_ack}
-  % \include{chapters/ack}
+  \include{chapters/ack}
 
   \tableofcontents
   \listoffigures
   \listoftables
   
-  \include{chapters/introduction}
-  \include{chapters/problem}
-  \include{chapters/relatedwork}
-  \include{chapters/opsatsea}
-  \include{chapters/transect}
-  \include{chapters/phortex}
-  \include{chapters/pikl}
-  \include{chapters/discussion}
-  \include{chapters/conclusion}
+  \include{chapters/introduction}  % vision and summary of the work
+  \include{chapters/problem}  % description of the general form of problem
+  \include{chapters/relatedwork}  % related technical work
+  \include{chapters/opsatsea}  % description of the field setting
+  \include{chapters/transect}  % Frontiers Paper
+  \include{chapters/phumes}  % observations + PHUMES part of JFR paper
+  % \include{chapters/phortex}  % PHORTEX + field results part of JFR paper
+  % \include{chapters/pikl}  % meaty future work section
+  % \include{chapters/discussion}  % philosophical statements
+  % \include{chapters/conclusion}  % concluding remarks
 
 \appendix
   \include{appendix/appa}
