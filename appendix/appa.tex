@@ -1,4 +1,4 @@
-\chapter{Perceiving}
+\chapter{Discovering Hydrothermalism from Afar}
 \label{app:perception}
 
 \section{Method for Methane Measurement from Niskin Bottles}
@@ -194,3 +194,41 @@ The prototypical plume envelope computed in this manner estimates a nonbuoyant p
     \caption[Plume model for transect design]{A prototypical plume estimate according to the modified buoyant plume model in crossflow. The same envelope is plotted with respect to absolute depth (with a source located at 1850 m) on the left, and illustratively in the context of the hydrothermal ridge on the right.}
     \label{fig:plume_envelopes}
 \end{figure}
+
+%%%%%%
+% Appendix B
+%%%%%%
+\chapter{\PHORTEX Algorithm Performance}
+\label{app:phortex}
+
+\section{Convergence Characteristics of Trajectory Optimizer}
+The trajectory optimization scheme presented in \cref{sec:to} uses a gradient-based optimizer with trust-bounded constraints in order to set the parameters of a set of lawnmower trajectories. In general, this is a difficult optimization problem, as analytical gradients that map the defining parameters of a lawnmower trajectory (orientation, size, and location) are not available, and must be numerically approximated. Moreover, by defining trust constraints, jumping between minima could be made more difficult, as the approximated gradients may lead through unsafe (un-trusted) space. In practice, this meant that initializing each lawnmower in a chain to be near a ``good trajectory'' was important. In the case of charting hydrothermal plumes, a ``good'' trajectory would be one approximately aligned with the estimated crossflow. As \PHUMES provides complete access to this information, it is generally easy to seed the trajectories to be near a performant minima. This leads to relatively fast convergence of the optimizer for each element in the chain. In \cref{fig:phortex_chain} there is an example a snapshot along the path to convergence for each link in a chain visualized, and the convergence plot. As is evidenced in the plot, a long travel time between chains is accumulated; this is likely because ``flipping'' a trajectory to shorten this distance would be a prohibitively difficult step in the nonlinear, constrained space that the optimizer operates.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/phortex_iterations.png}
+    \caption[\PHORTEX optimization performance]{Example snapshots of each link in a \PHORTEX trajectory from a \cref{chap:phortex} simulation trial, and their corresponding convergence plots. While trajectories show good agreement with the current function and size of a plume expression as modeled by \PHUMES, a long travel time between chains is accumulated; this is likely because ``flipping'' a trajectory to shorten this distance would be a prohibitively difficult step in the nonlinear, constrained space that the optimizer operates.}
+    \label{fig:phortex_chain}
+\end{figure}
+
+\section{Chaining Characteristics of \PHUMES}
+For computational reasons, it is typically not possible to run the chains for thousands of samples while in the field, and the chains must be arbitrarily cut short in order to generate a plan. For this reason, it is interesting to look at the chaining properties. For a simulation trial, as described in \cref{chap:phortex}, we show the chains and probability densities for each of vent area, vent fluid velocity, and entrainment coefficients in \cref{fig:phumes_sim_chain}. As evidenced by the multimodal area plot, we observe that the relationship between the parameters is complicated; in general, an inverse problem like the one we have posed for \PHUMES is a challenge to infer. What is promising however is that probability densities are being concentrated in areas that make sense (as observed by a mode at 0.8 for area), and that the \emph{combinations} of learned parameters are sensible --- a large area should be coupled with a slow or medium velocity; a high velocity should be paired with a small area --- based on the relationships between parameters and how they manifest in the ultimate shape of the plumes in the 3D Cartesian space.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/phumes_trial_chain.png}
+    \caption[\PHUMES simulation chain]{An example chain from a simulation trial as described in \cref{chap:phortex}. The last 150 samples in each chain is used to compute the distributions in blue; all samples are shown in gray in the top plots. Red lines in the top plots indicate the generating environment value for the simulation. The chain efficiency is approximately 37.5\%.}
+    \label{fig:phumes_sim_chain}
+\end{figure}
+
+We can also look at how convergence may change for longer chains. In an exemplar trial (\cref{fig:phumes_long_chain}), a chain is run for 650 samples, and the last 500 samples are used to compute densities. The acceptance rate stays approximately the same, at about 34\%. However, the distributions have generally improved with respect to placing more density at the parameters that defined the true underlying environment. As evidenced in the area and velocity sampling plots, there is still some exploration of the state space being performed by the chains; this suggests that true convergence of these chains may either take a long time, or the information content of the data that is available to explore the state space leads to ambiguous ``wells'' which the chains would ``bounce'' between for long durations. This suggests that other Monte Carlo techniques, such as Hamiltonian Monte Carlo~\autocite{duane1987hybrid}, may be of interest in adaptation of this work, to accelerate chain exploration.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/phumes_long_chain.png}
+    \caption[\PHUMES long chain]{An example chain from a simulation trial as described in \cref{chap:phortex}, but run for 650 samples; the last 500 are used to compute the distributions in blue with all samples shown in gray in the top plots. Red lines in the top plots indicate the generating environment value for the simulation. The chain efficiency is approximately 34\%.}
+    \label{fig:phumes_long_chain}
+\end{figure}
+
+\section{Code Availability}
+\td{Might be nice to link to the code here and have some brief documentation on how to use it.}
