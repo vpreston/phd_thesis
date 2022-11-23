@@ -1,5 +1,15 @@
 \chapter{Discovering Hydrothermalism from Afar}
 \label{chap:afar}
+
+\begin{center}
+    \begin{minipage}{0.7\textwidth}
+      \begin{small}
+      I had a blank canvas to fill with extraordinary possibilities, a fascinating jigsaw puzzle to piece together: mapping the world's vast hidden seafloor.\\ \emph{Marie Tharp}
+      \end{small}
+    \end{minipage}
+    \vspace{0.5cm}
+\end{center}
+
 To track a spatiotemporal phenomenon requires first being able to sense it. There are two core challenges associated with perceiving hydrothermal plumes: existence (and availability) of technology and interpretation of heterogeneous data streams. With respect to deep-sea capable instrumentation, temperature, pressure, conductivity, and turbidity are all examples of quantities that can be near instantaneously measured by existing state-of-the-art \emph{in situ} sensors. However, for many geochemical quantities such as dissolved greenhouse gases (e.g., carbon dioxide, methane), few (if any) commercial sensors with rapid response times suitable for use on a mobile platform exist. This limitiation has had severe impact on the ability for scientists to study phenomena like hydrothermal plumes, as these entities may be difficult to identify only from temperature or conductivity anomalies, but are expected to be significantly geochemically distinctive from background seawater levels of the ocean~\autocite{scholz2019shelf,jakuba2007stochastic}. In this chapter, two experimental dissolved methane instruments are used in an ocean trial at a hydrothermal basin. The utility of methane as a signal for the presence of plume waters is compared against other standard oceanographic equipment.
 
 The second challenge, interpreting heterogeneous data streams, is a problem that arises when the quantity of interest is a conceptual entity, rather than an absolute one. Concretely; temperature can be directly observed with a single instrument, but ``plumes'' cannot be directly sensed as they are definitionally an aggregation of properties distinct from background seawater. So, to observe ``plumes'' requires interpretting data from multiple heterogeneous sensors in order to identify which robot locations observed plume-derived fluids, and which did not. Heterogeneity in this case refers to the different operating principles and observable quantities that are measured by a suite of scientific sensors. As these sensors may respond to the environment at different time scales, have different sensitivities, and measure quantities which may physically manifest themselves differently in unique spatiotemporal regions of a plume (and may be unique to each plume that is surveyed), it is not straightforward to universally filter these data streams for plume detections. To this end, this chapter presents several methods for detecting ``change-points'' in data streams that can be used to indicate anomolous features in a datastream unique to hydrothermalism, and which can be broadly applied to many different types of field settings.
