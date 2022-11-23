@@ -219,7 +219,12 @@ We have shown that \PHUMES can learn explanatory models of the plume structure i
 \subsection{Using \PHUMES to Estimate Energy Flux}
 As established in \cref{sec:field_rw}, one of the key reported metrics when studying hydrothermalism is the energetic characteristic of a venting source. This is typically computed using a stationary buoyant plumes model, e.g.,~\cite{morton1956turbulent} or~\cite{speer1989model}, which do not take into account crossflow. To investigate how \PHUMES may be used for similar studies, we establish the relationship between the learned parameters $\x_c$ and $\x_p$. Flux in the model is computed using temperature, vent area, and vent fluid exit velocity; these values are agnostic to crossflow and mixing entrainment, as they are estimated to be the values immediately at the vent source. In FIGURE, we show the contours which describe each of heat, buoyancy, and momentum flux with respect to vent area and vent fluid exit velocity for a fixed temperature. As is evident, for any flux curve, there is a countably infinite set of velocity and area settings that could satisfy. This leads to the notion of ``ill-posed'' inverse problems, as briefly discussed in \cref{sec:future}.
 
-\td{Figure here of the flux contours}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/flux_nbp.png}
+    \caption{NBP and Flux, all in one!}
+    \label{fig:nbp_flux}
+\end{figure}
 
 For many studies, for which direct estimates of fluid velocity and area can be observed, these flux values can be constrained; however access only to water column measurements means that these values must be inferred. Thus, more information needs to be utilized. For the \PHUMES model, both crossflow and degree of mixing are explanatory of the neutrally-buoyant plume height, which is observable by AUV or rosette transects. To understand the relationship between crossflow and neutrally-buoyant height, FIGURE shows the time-varying neutrally buoyant height as the current magnitude is swept according to the learned crossflow model presented in \cref{sec:external_current} for a mixed set of mixing coefficients. We can see that over time, a plume ``fills in'' the water column at different heights. When compared to the profile we previous showed\dots The structure may alternatively be explained from the presence of multiple sources....
 
