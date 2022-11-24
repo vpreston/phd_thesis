@@ -20,17 +20,52 @@
 The environmental sciences are the multidisciplinary, academic studies which aim to understand the Earth and its processes.
 \emph{In situ} observational studies, or \emph{expeditions}, serve as the foundation on which scientific discovery and model development are predicated in these fields.
 With improvements in technology, expeditions have been conducted in the deepest trenches of the ocean to the uppermost atmosphere.
-Improved reach, in addition to improved observational quality, density, and availability has made it increasingly clear how inextricably entwined Earth's regulatory processes are.
-As technology development has accelerated, the availability and adoption of remote observational equipment (e.g., imaging satellites) has revolutionized the ability to collect e.g., global-scale datasets of climate.
-However, these technologies have yet to have the spatial or temporal resolution to better \emph{in situ} analysis of many terrestrial systems\footnote{Indeed, many remote instruments require \emph{in situ} observations for calibration anyway.}, and they fully fail to resolve underwater or subterranean domains. 
+Improved reach, in addition to improved observational quality, density, and availability has made it increasingly clear how inextricably entwined Earth's regulatory processes are, and how crucial a role the ocean plays in these processes.
+Covering 70\% of the Earth's surface, the ocean is the largest biosphere on the planet, home to a staggering number of unique micro-organisms, up to the largest creatures on Earth.
+The plant life supported by the ocean and ocean-coast interfaces are estimated to absorb 50\% of all excess carbon dioxide emissions produced anthropogenically, acting as a buffer to global heating\autocite{hori2019blue}.
+Culturally, the ocean is also entwined with our sense of humanity---the support of civilizations with abundant natural resources, the devastation of yet other civilizations from natural disaster, the inspiration to explore out toward the infinite horizon.
+Despite the centrality of the ocean to existence (and continued existence) as we know it on Earth, there is yet so much that has yet to be discovered.
 
-% The environmental sciences are a multidisciplinary endeavor to understand the Earth, its ecosystems, and its processes, for which \emph{in situ} observational studies or \emph{expeditions} serve as the foundation on which scientific discovery and model development are predicated.
-Robots are uniquely well-positioned to advance long-term monitoring of and exploration in mesoscale\footnote{Tens of meters to several kilometers} planetary environments through autonomous expeditions.
-By virtue of their form, robots can be used in extreme places (e.g., deep sea), dangerous scenarios (e.g., edge of calving ice sheets), or long-term missions (e.g., Mars exploration). Increasingly, robotic platforms are being developed for scientific expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories such as uniform coverage lawnmowers~\autocite{camilli2010tracking}.
+In the last decade, significant effort has been put to finely mapping the seafloor\footnote{e.g., through Seabed 2030, among other initiatives}, and as of mid-2022 nearly 25\% of the seafloor has been mapped bathymetrically in high resolution (compared to about 6\% in 2017). 
+High resolution maps allow us to better understand continental drift and crustal processes, the distribution of natural resources, and the ecosystems which ocean structures can support.
+Unlike terrestrial environments, which can be largely observed remotely (either by plane, or more commonly now, satellite), the ocean, especially the deep ocean, cannot be globally observed due to the conductive properties of water and it's tendency to absorb many forms of light and radio energy.
+\emph{In situ} equipment is necessary, and mapping the seafloor requires physically going to sea.
+The mapping revolution of the ocean is enabled\footnote{In other part, it has been enabled by an increased economic and political commitment to the ocean, it's strategic value, and the resources contained within it.} thanks in part to improved acoustic technology and processing tools, which allow shipboard sounders to collect high resolution acoustic ``imagery'' while traversing on the surface ocean.
+
+Bathymetry is one piece of the giant puzzle that is the ocean; another piece seeing contemporary scrutiny is geochemistry of the deep ocean.
+Geochemistry, the study of Earth and other planetary geological systems through chemical principles, enables us to understand the processes which create and sustain the structures that bathymetric maps reveal, and tell us more about local ecosystems and their nutrient and energetic budgets. 
+Geochemical measurements may range from studying the composition of rock samples from the seafloor, to \emph{in situ} observations of dissolved gases in a hydrothermal plume.
+Modern interests in seafloor mining to remove materials from the deep ocean, and deep ocean carbon sequestration to inject the ocean with excess materials, stand to directly impact the balance of the deep biogeosphere, with implications that have yet to be well understood by science.
+Unlike acoustic surveys, which even though highly localized can be performed from a ship hundreds or thousands of meters above the seabed, geochemical surveys must truly be conducted \emph{in situ} with instruments physically sent to the deep ocean to collect continuous measurements, or physical bottle samples of water or rock specimens retrieved for \emph{ex situ} analysis.
+There is an ongoing paradigm shift in ocean technology to better enable geochemical studies of the deep ocean: development of novel \emph{in situ} sensors, creation of more depth-capable instruments, and adoption of autonomous technologies for sample collection or expedition planning. 
+
+Intelligent autonomous technologies are any systems which can automatically process and analyze a data product, and formulate evidence-based decisions which they may then act upon.
+These systems may be \emph{embodied}, like robotic vehicles, or simply algorithmic.
+A science party member at sea can be viewed as an intelligent autonomous agent for an expedition: the scientist will be collecting and processing data throughout the voyage, using that data to coordinate with other science party members to design activities, and managing the deployment of various sensors and platforms.
+Good algorithmic or robotic contributions relieve the burden of data processing and decision-making on the science party to make their time, the expedition time, and the resources aboard a vessel more effective.
+For marine geochemical surveys, one of the key challenges for the science party to grapple with is understanding \emph{spatiotemporal distributions}, which are nearly ubiquitous in water column studies.
+A spatiotemporal distribution evolves in space and time; in the deep sea, these may take the form of hydrothermal plumes, hydrate dissolution, sediment transport, or water mass mixing.
+
+\emph{Perceiving} a spatiotemporal distribution from sparse, point observations; \emph{predicting} the evolution of the distribution into future expedition dates or sites; and \emph{planning} where and when to take samples of the phenomenon for further inspection, are key challenges for any autonomous agent.
+This thesis...
+
+
+
+
+
+
+
+
+
+
+As a tool, robots are uniquely well-positioned to advance long-term monitoring of and exploration in mesoscale\footnote{Tens of meters to several kilometers} deep ocean environments through autonomous \emph{in situ} expeditions. 
+Increasingly, robotic platforms are being developed for such expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories such as uniform coverage lawnmowing patterns~\autocite{camilli2010tracking}.
 This restriction is often applied in order for trajectories to be rigorously checked by teams of science or engineering staff prior to execution as a policy of risk reduction, and for ease of supervision during execution.
-Operating without agency (i.e., nonadaptive) necessarily restricts the class of phenomena that can be effectively studied by expeditionary scientific robots.
-For instance, spatiotemporal distributions---deep sea hydrothermal plumes, algal blooms, weather cells---can be severely under-sampled or missed using nonadaptive strategies~\autocite{flaspohler2019information, preston2019adaptive}.
-Given the ubiquity of spatiotemporal phenomena and the cost of scientific field operations, it is critical to improve the efficacy of robots as autonomous scientific tools and extend their capabilities.
+Operating without agency (i.e., nonadaptive) necessarily restricts the class of phenomena that can be effectively studied by expeditionary robots used in the science fleet today.
+For geochemical surveys, this has serious consequences, as \emph{spatiotemporal distributions} are nearly ubiquitous for water column studies.
+A spatiotemporal distribution evolves in space and time; in the deep sea, these may take the form of hydrothermal plumes, hydrate dissolution, sediment transport, or water mass mixing. 
+Using non-adaptive surveying strategies, spatiotemporal distributions can be severely under-sampled or missed completely\autocite{flaspohler2019information, preston2019adaptive}, because access to the underlying dynamics model for an environment is generally unknown.
+Given the urgency to advance our understanding of the deep biogeosphere and the cost of scientific field operations, it is critical to improve the efficacy of geochemical surveying expeditions, and the tools at their disposal.
 
 In this thesis, the challenges of performing informative sampling trajectories with expeditionary robots in spatiotemporal environments will be closely studied. 
 This research spans practical to theoretical challenges and considerations, and was performed in close collaboration with scientists and engineers in fields including oceanography and geochemistry, computational statistics, robotics, and data science.
