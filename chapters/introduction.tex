@@ -21,21 +21,21 @@ The environmental sciences are the multidisciplinary, academic studies which aim
 \emph{In situ} observational studies, or \emph{expeditions}, serve as the foundation on which scientific discovery and model development are predicated in these fields.
 With improvements in technology, expeditions have been conducted in the deepest trenches of the ocean to the uppermost atmosphere.
 Improved reach, in addition to improved observational quality, density, and availability has made it increasingly clear how inextricably entwined Earth's regulatory processes are, and how crucial a role the ocean plays in these processes.
-Covering 70\% of the Earth's surface, the ocean is the largest biosphere on the planet, home to a staggering number of unique micro-organisms, up to the largest creatures on Earth.
-The plant life supported by the ocean and ocean-coast interfaces are estimated to absorb 50\% of all excess carbon dioxide emissions produced anthropogenically, acting as a buffer to global heating\autocite{hori2019blue}.
-Culturally, the ocean is also entwined with our sense of humanity---the support of civilizations with abundant natural resources, the devastation of yet other civilizations from natural disaster, the inspiration to explore out toward the infinite horizon.
+Covering 70\% of the Earth's surface, the ocean is the largest biosphere on the planet, home to a staggering number of unique microorganisms up to the largest creatures on Earth, ultimately encompassing over 90\% of the habitable volume on Earth\autocite{cario2019exploring,purkis2022remote}.
+The plant life supported by the ocean and ocean-coast interfaces are estimated to absorb 50\% of all excess carbon dioxide emissions produced by anthropogenic sources, acting as a buffer to global heating\autocite{hori2019blue}.
+Culturally, the ocean is also entwined with our sense of humanity and development of society---island and coastal habitats supported the earliest hominids\autocite{erlandson2006oceans}, traveling the ocean has shaped trade, conquest, and tradition\autocite{pearson2003indian,chaudhuri1985trade,firth2019understanding,nunn2003nature}, and the ocean inspires creativity, recreation, and curiosity.
 Despite the centrality of the ocean to existence (and continued existence) as we know it on Earth, there is yet so much that has yet to be discovered.
 
-In the last decade, significant effort has been put to finely mapping the seafloor\footnote{e.g., through Seabed 2030, among other initiatives}, and as of mid-2022 nearly 25\% of the seafloor has been mapped bathymetrically in high resolution (compared to about 6\% in 2017). 
+In the last decade, significant effort has been put to finely mapping the seafloor\footnote{e.g., through Seabed 2030~\autocite{mayer2018nippon}, among other initiatives}, and as of mid-2022 nearly a quarter of the seafloor has been mapped bathymetrically in high resolution (compared to about 6\% in 2017)\footnote{As reported by Seabed 2030 at \url{https://seabed2030.org/mapping-progress}.}. 
 High resolution maps allow us to better understand continental drift and crustal processes, the distribution of natural resources, and the ecosystems which ocean structures can support.
-Unlike terrestrial environments, which can be largely observed remotely (either by plane, or more commonly now, satellite), the ocean, especially the deep ocean, cannot be globally observed due to the conductive properties of water and it's tendency to absorb many forms of light and radio energy.
-\emph{In situ} equipment is necessary, and mapping the seafloor requires physically going to sea.
-The mapping revolution of the ocean is enabled\footnote{In other part, it has been enabled by an increased economic and political commitment to the ocean, it's strategic value, and the resources contained within it.} thanks in part to improved acoustic technology and processing tools, which allow shipboard sounders to collect high resolution acoustic ``imagery'' while traversing on the surface ocean.
+Unlike terrestrial environments, which can be largely observed remotely (either by aircraft, or more commonly now, satellite), the ocean, especially the deep ocean, cannot be globally observed due to the conductive properties of water and it's tendency to absorb many forms of light and radio energy.
+Mapping the seafloor requires physically going to sea.
+The mapping revolution of the ocean is enabled thanks in part\footnote{In other part, it has been enabled by an increased economic and political commitment to the ocean, it's strategic value, and the resources contained within it.} to improved acoustic technology and processing tools, which allow shipboard acoustic sounders to collect high resolution ``imagery'' while traversing on the surface ocean.
 
 Bathymetry is one piece of the giant puzzle that is the ocean; another piece seeing contemporary scrutiny is geochemistry of the deep ocean.
 Geochemistry, the study of Earth and other planetary geological systems through chemical principles, enables us to understand the processes which create and sustain the structures that bathymetric maps reveal, and tell us more about local ecosystems and their nutrient and energetic budgets. 
 Geochemical measurements may range from studying the composition of rock samples from the seafloor, to \emph{in situ} observations of dissolved gases in a hydrothermal plume.
-Modern interests in seafloor mining to remove materials from the deep ocean, and deep ocean carbon sequestration to inject the ocean with excess materials, stand to directly impact the balance of the deep biogeosphere, with implications that have yet to be well understood by science.
+Modern interests in seafloor mining to remove materials from the deep ocean\autocite{thompson2018seabed}, and deep ocean carbon sequestration to inject the ocean with excess materials\autocite{teng2018long}, stand to directly impact the balance of the deep biogeosphere, with implications that have yet to be well understood (or agreed upon) by science\autocite{smith2020deep,seibel2001potential,fleeger2010response,sharma2015environmental,childs2020extraction,van2011tighten}.
 Unlike acoustic surveys, which even though highly localized can be performed from a ship hundreds or thousands of meters above the seabed, geochemical surveys must truly be conducted \emph{in situ} with instruments physically sent to the deep ocean to collect continuous measurements, or physical bottle samples of water or rock specimens retrieved for \emph{ex situ} analysis.
 There is an ongoing paradigm shift in ocean technology to better enable geochemical studies of the deep ocean: development of novel \emph{in situ} sensors, creation of more depth-capable instruments, and adoption of autonomous technologies for sample collection or expedition planning. 
 
@@ -44,45 +44,105 @@ These systems may be \emph{embodied}, like robotic vehicles, or simply algorithm
 A science party member at sea can be viewed as an intelligent autonomous agent for an expedition: the scientist will be collecting and processing data throughout the voyage, using that data to coordinate with other science party members to design activities, and managing the deployment of various sensors and platforms.
 Good algorithmic or robotic contributions relieve the burden of data processing and decision-making on the science party to make their time, the expedition time, and the resources aboard a vessel more effective.
 For marine geochemical surveys, one of the key challenges for the science party to grapple with is understanding \emph{spatiotemporal distributions}, which are nearly ubiquitous in water column studies.
-A spatiotemporal distribution evolves in space and time; in the deep sea, these may take the form of hydrothermal plumes, hydrate dissolution, sediment transport, or water mass mixing.
+A spatiotemporal distribution is a phenomenon that evolves in space and time; in the deep sea, these may take the form of hydrothermal plumes, hydrate dissolution, sediment transport, or water mass mixing.
 
-\emph{Perceiving} a spatiotemporal distribution from sparse, point observations; \emph{predicting} the evolution of the distribution into future expedition dates or sites; and \emph{planning} where and when to take samples of the phenomenon for further inspection, are key challenges for any autonomous agent.
-This thesis...
+\emph{Perceiving} a spatiotemporal distribution from sparse \emph{in situ} measurements; \emph{predicting} the evolution of the distribution into future expedition dates or sites; and \emph{planning} where and when to take samples of the phenomenon for further inspection, are key challenges for any autonomous agent.
+This thesis presents several algorithmic and operational strategies for addressing these challenges for deep ocean geochemical surveys, with a particular contextual focus on charting the spatiotemporal structure of hydrothermal plumes.
+The algorithmic contributions of this thesis are motivated by tools used in the discipline of robotics to enable \emph{planning under uncertainty}; a technique for decision-making with incomplete information about a target environment or task.
+In planning under uncertainty architectures there are many design choices available to an engineer---how data is processed, how the data is used to construct a \emph{belief} about the environment or task, and how that belief is leveraged to pick actions to take.
+Field and scientific contexts provide constraints and requirements that shape the feasible set of design choices that can be made, sometimes requiring creativity outside the pale in theoretical research.
+A core tenant of the research presented here is a field roboticist has a special responsibility to ensure that the solutions that are engineered accomplish the science that they were designed for.
+In line with this, scientific results which enhance understanding about deep sea hydrothermal plumes are found throughout this thesis, in balance with formulation and assessment of autonomous technologies.
+
+In the rest of this chapter, an overview of deep hydrothermalism and geochemical field operations is provided, in addition to a summary of specific algorithmic challenges and the techniques employed in this thesis to overcome them.
+A brief contribution statement concludes the chapter.
+
+% This research spans practical to theoretical challenges and considerations, and was performed in close collaboration with scientists and engineers in fields including oceanography and geochemistry, computational statistics, robotics, and data science.
+% Chief among the challenges addressed in this research is the problem of uncovering the underlying dynamics of a spatiotemporal distribution.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hydrothermal Plume Charting
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Hydrothermalism in the Deep Ocean}
+\label{sec:charting-plumes}
+The deep ocean is considered to be any part of the ocean at least \SI{200}{\meter} below sea-level\footnote{Some literature more specifically claims the deep ocean to be at least \SI{1000}{\meter} below the surface. I will use the \SI{200}{\meter} definition, unless otherwise stated.}.
+Volumetrically, the deep ocean is \emph{most} of the ocean, and life has been discovered at every depth, including the Challenger Deep, the deepest point on Earth at nearly \SI{110000}{\meter}\autocite{cario2019exploring}\footnote{Interestingly, the average depth of the ocean is approximately \SI{3800}{\meter}; above sea-level, the average height of land is \SI{840}{\meter}.}.
+A persistent adage in the ocean sciences is that more is known about the surface of other worlds than about our own deep ocean.
+This is poignantly illustrated with the first observation of hydrothermal vents in 1977 at the Galápagos Rift~\autocite{corliss1979submarine}, 8 years after humans walked on the moon for the first time.
+
+Since 1977, hundreds of vents have been discovered and studied around the world\autocite{beaulieu2013authoritative}, and subject of increasingly urgent conversations about characterizing the deep ocean.
+Seafloor venting sites, energized by magmatic sources, release fluids between 20-\SI{400}{\celsius} (background deep ocean temperatures are approximately \SI{2}{\celsius}) and imbued with minerals, metals, dissolved gases, and other compounds~\autocite{jannasch1985geomicrobiology, martin2008hydrothermal}.
+These warm, nutrient-pumping sites in the deep ocean have created oases for unique micro- and macro-fauna~\autocite{corliss1979submarine}, and the venting fluids, called plumes, can deposit minerals and metals over kilometer (basin) scales\autocite{scholz2019shelf,resing2015basin,le2019hydrothermal}.
+Detection and characterization of seafloor hydrothermal venting are critical for understanding fundamental interactions between the deep ocean, its underlying basaltic crust, the deep biosphere, and (bio)geochemical fluxes.
+
+To study hydrothermalism in the deep ocean, rosettes\footnote{Rosettes are often a metal cage with instrumentation and bottles that is attached to a ship via a cable; it can be raised and lowered in the water column with a shipboard winch.}, remotely-operated vehicles (ROVs), human occupied vehicles (HOVs), and autonomous underwater vehicles (AUVs) all equipped with specialized \emph{in situ} instrumentation and often bottles for water sampling, are available.
+ROVs and HOVs have enabled detailed study of venting chimneys and diffusive venting fields on the seafloor, literally ``putting eyes'' on the structures and physically interacting with them.
+To study plumes generated by vents, AUVs and rosettes can be used to examine the water column.
+However, using these technologies to produce detailed studies of plumes is more challenging than studying a vent; plume signal is naturally variable, turbulent, and ephemeral and navigating in the water column is a logistical challenge due to lack of physical features by which to navigate or localize. 
+Thus, many detections of a plume tend to be serendipitous in practice.
+
+To leverage these detections, laboratory experiments to model how plumes are expected to manifest in the water column have served a critical role in converting field observations to statements about energetic characteristics, nutrient transport, and overall impact in a basin.
+Among the most widely used models that describe hydrothermal plumes are the Morton, Taylor, and Turner (MTT) model for buoyant plumes derived in the 1950s~\autocite{morton1956turbulent}, and the re-derivation specifically for hydrothermal plumes in the late 1980s by Speer and Rona~\autocite{speer1989model}.
+These idealized (time-averaged) models describe a roughly two part plume structure composed of a buoyant stem and a neutrally-buoyant layer. 
+The buoyant stem is a spatially small expression that describes the fluid that rapidly rises from an originating vent orifice, driven by buoyant forces that result in the difference in density between the warm venting fluid and the ambient seawater.
+The neutrally-buoyant\footnote{This can be equivalently styled as non-buoyant.} layer describes the spatially large spread of vent-derived fluids along the isopycnal of equal density with the ambient seawater\footnote{Readers are referred to~\autocite{yoerger2007autonomous} for an illustrative description and figure.}. 
+State-of-the-art hydrothermal plume models incorporate time-varying Navier-Stokes models and more complicated fluid structures\footnote{e.g.,~\autocite{lavelle2013turbulent,xu2012deep}}.
+Mathematically, these models describe what has been practically well-understood in observational studies: the spatiotemporal distribution of plumes is instantaneously complicated and on small scales (meters, minutes) driven by compounding, chaotic factors that are difficult to calibrate.
 
 
 
+\td{Include a nice illustrative figure of plumes?}
 
 
+Field measurements are used to set the initial conditions or parameters of a numerical model, which is then used in turn to make claims about characteristics of a plume.
+This is widely known as solving an \emph{inverse problem}; using observations to find an explanatory set of variables (e.g., initial conditions, numerical parameters).
+One of the key challenges of solving an inverse problem with observations in the sciences is that the problem is mathematically ill-posed; that is, it is difficult to find the correct, unique solution due to noise in the observations and the time/space that those observations were taken.
+For instance, observations along or near the exact centerline of a plume may be significantly more informative about the vent characteristics\autocite{bangian2022solution} than samples randomly collected throughout a plume structure\autocite{baker1998rise}.
+But given that most field measurements are serendipitous, solving the inverse problem to an acceptable level of accuracy requires grappling with \emph{uncertainty}\footnote{Both epistemic and aleatoric. Aleatoric uncertainty in this case comes from the chaotic nature of spatiotemporal distributions (for instance, turbulent flows). Epistemic uncertainty is definitional, as we have uncertainty of the model and noisy observations.}.
+Probabilistic representations or analytical models of uncertainty have been used in plume studies to help place confidence intervals over found solutions\autocite{bemis1993geothermal,sohn2019observations}.
+In classical studies, uncertainty is computed following an expedition and after all data is available.
+In this thesis, an algorithmic extension to the classical uncertainty formalism is extended to enable practical-time inference of plume characteristics while at sea.
+By computing a notion of uncertainty while at sea, strategic changes to the science activities and instrument deployments can be undertaken to target collection of more informative samples.
 
 
+% over the underlying dynamics of a target environment due to the extreme partial observability of point \emph{in situ} measurements in a continuous three-dimensional volume over time influenced by complicated spatiotemporal dynamics of water mixing, tidal advection, and chaotic turbulence.
+% The notion of uncertainty has implications for solving both the \emph{inverse} and \emph{forward} problem inherently posed in hydrothermal plume charting.
+% Discovering the underlying model from a set of data, the inverse problem, is known to be ill-posed in spatiotemporal systems CITE, suggesting that the information content of every sample has an outsized effect on the accuracy of recovered dynamics.
+% With a known dynamics model, forward simulating a model with uncertainty placed over initial conditions or descriptive parameters requires propagating that uncertainty forward.
+% In time-dependent models, even modest amounts of uncertainty can accumulate quickly over short horizons CITE, yielding essentially uninformative predictive state estimates for planning.
+% A principled treatment of uncertainty, particularly the identification of \emph{useful} uncertainty for planning, is necessary. 
+% WORDS ON HOW PEOPLE HAVE THOUGHT ABOUT UNCERTAINTY IN HYDROTHERMAL SYSTEMS
 
 
+% Questions related to mineral and metal deposition from plumes highlight the acute scientific need to better study not just hydrothermal vents themselves, but the plume structures that are produced by them which are the primary drivers of nutrient injection in the deep ocean biosphere.
+% Scientific studies that benefit from directly charting the spatiotemporal structure of a plume include those which characterize the transport and deposition of particulates, the distribution and transport of biological materials (including microbes) in the deep ocean, and field-based statistical modeling of turbulent water mass mixing.
 
-As a tool, robots are uniquely well-positioned to advance long-term monitoring of and exploration in mesoscale\footnote{Tens of meters to several kilometers} deep ocean environments through autonomous \emph{in situ} expeditions. 
-Increasingly, robotic platforms are being developed for such expeditions, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories such as uniform coverage lawnmowing patterns~\autocite{camilli2010tracking}.
-This restriction is often applied in order for trajectories to be rigorously checked by teams of science or engineering staff prior to execution as a policy of risk reduction, and for ease of supervision during execution.
-Operating without agency (i.e., nonadaptive) necessarily restricts the class of phenomena that can be effectively studied by expeditionary robots used in the science fleet today.
-For geochemical surveys, this has serious consequences, as \emph{spatiotemporal distributions} are nearly ubiquitous for water column studies.
-A spatiotemporal distribution evolves in space and time; in the deep sea, these may take the form of hydrothermal plumes, hydrate dissolution, sediment transport, or water mass mixing. 
-Using non-adaptive surveying strategies, spatiotemporal distributions can be severely under-sampled or missed completely\autocite{flaspohler2019information, preston2019adaptive}, because access to the underlying dynamics model for an environment is generally unknown.
-Given the urgency to advance our understanding of the deep biogeosphere and the cost of scientific field operations, it is critical to improve the efficacy of geochemical surveying expeditions, and the tools at their disposal.
 
-In this thesis, the challenges of performing informative sampling trajectories with expeditionary robots in spatiotemporal environments will be closely studied. 
-This research spans practical to theoretical challenges and considerations, and was performed in close collaboration with scientists and engineers in fields including oceanography and geochemistry, computational statistics, robotics, and data science.
-Chief among the challenges addressed in this research is the problem of uncovering the underlying dynamics of a spatiotemporal distribution.
-With access to a perfect physics model of an environment, trajectories for a robotic platform could be exactly produced for some sampling task.
-However, rarely (and arguably never) is such a perfect model of an environment available.
-Instead, there is considerable \emph{uncertainty} about the underlying form of the dynamics model\footnote{Both epistemic and aleatoric. Aleatoric uncertainty in this case comes from the chaotic nature of spatiotemporal distributions (for instance, turbulent flows). Epistemic uncertainty is definitional, as we have uncertainty of the model and noisy observations.}
-To reduce uncertainty, roboticists and scientists both typically turn to data; here in the form of \emph{in situ} observations.
-Unfortunately, data that can be collected in real field trials with mobile platforms tends to be noisy and extremely partially observable---that is, the observations are only at point locations in time and space, and may be indirect measurements of a desired field of interest. 
-Consequently, common data-driven models trained with this type of input would require many samples in order to generalize a useful simulator for planning; a luxury that, in the field, is typically not afforded due to limited opportunities for deployments and finite mission timelines.
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Autonomy Challenges
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Challenges for Intelligent Autonomy}
+For geochemical studies in the water column, AUVs are uniquely well-positioned to advance long-term monitoring of and exploration in mesoscale\footnote{Tens of meters to several kilometers} deep ocean environments during \emph{in situ} expeditions.
+Autonomy for a robotic system can fall on an ``agency'' spectrum: a robot with full agency can make adjustments to its own behavior; a robot with no agency can execute a pre-determined set of tasks without supervision, but cannot change the tasks while performing.
+Increasingly, AUVs are being developed for deep sea research\autocite{kaiser2016design,yuh2000design,okamoto2019visual,maki2014auv}, but their autonomous capabilities are typically limited to executing predetermined hand-designed trajectories such as uniform coverage lawnmowing patterns~\autocite{camilli2010tracking}, falling in the category of robots without agency.
+This restriction is often applied in order for trajectories to be rigorously checked by engineering teams prior to execution as an operational policy of risk reduction, and for ease of supervision during execution.
 
-The problem of discovering a useful forward simulator for spatiotemporal is not impossible, however.
-Decades of research have been dedicated to the recovery of environmental models by experimental trials and mathematical reasoning by scientists.
-For instance, the Navier-Stokes equations, which describe the motion of viscous fluids, are the philosophical, mathematical, and experimental results of Leonhard Euler~\autocite{euler1757principes}, Claude-Louis Navier~\autocite{navier1822lois}, and George Gabriel Stokes~\autocite{stokes1851effect} stretching from 1757 to 1851. 
-Each mathematician started from the knowledge of their predecessor(s), and extended the sophistication of the model in turn.
-This is a natural scientific process, and it is a process that is well suited to inspire algorithmic adaptation.
-The emergence of the field of scientific machine learning, which leverages numerical scientific models or physical principles within neural networks~\autocite{raissi2019physics, sapsis2009dynamically, mohan2019compressed}, Gaussian Processes (GPs)~\autocite{raissi2018numerical}, and similar learning representations~\autocite{kulkarni2019advection, brunton2016discovering}, directly demonstrates how such algorithmic adaptation can ultimately manifest in novel forward simulators discovered from relatively limited trajectory data in space-time.
+Operating without agency necessarily restricts the class of phenomena that can be effectively studied by expeditionary robots used in the science fleet today.
+Using non-adaptive surveying strategies, spatiotemporal distributions can be severely under-sampled or missed completely\autocite{flaspohler2019information, preston2019adaptive}.
+This can be mitigated when the underlying model of the spatiotemporal dynamics is known, but for reasons explained in the previous section, in field settings a dynamics model must be estimated from data.
+This estimation process is challenging, as data that can be collected in real field trials tends to be noisy and extremely \emph{partially observable}---that is, the observations are only at point locations in time and space, and may be indirect measurements of a desired field of interest. 
+Consequently, classical data-driven modeling techniques used in robotics to describe the environment in which a robot finds itself, such as Guassian Processes\autocite{Rasmussen2004}, neural networks\autocite{cohn1994neural,wang2017predrnn}, or particle representations\autocite{Silver2010}, would require many observations to generalize to a useful model for planning; a luxury that, in the field, is typically not afforded due to limited opportunities for deployments and finite expedition timelines.
+
+
+\td{Add illustration of naive versus strategic lawnmower placement.}
+
+
+Access to numerical models of plume dynamics stands to significantly relieve the burden on data alone to recover a descriptive model of the target environment during an expedition.
+Scientific machine learning (SML), an emerging subfield of machine learning, has shown that leveraging numerical scientific models of physical principles within classically data-driven frameworks\autocite{raissi2019physics, sapsis2009dynamically, mohan2019compressed,raissi2018numerical,kulkarni2019advection, brunton2016discovering,jiahao2020learning} can improve the data efficiency of a learner and the overall quality of the model that is uncovered.
+To extend SML algorithmic theory to field settings, in which computational time is limited and field observations are corrupted with noise (and significantly partially observable), requires careful selection of both the underlying numerical model and the learning framework that wraps it.
+Foundational principles (e.g., conservation of mass, non-divergence) 
+
 
 
 %%% Starting here, needs some editing attention
@@ -114,94 +174,21 @@ Hydrothermalism plays a critical role in these processes, as a nutrient (and met
 To chart hydrothermal plumes means to survey the structure of the warm, nutrient-rich water that is ejected from vents on the seafloor.
 As plumes are subject to instantaneous turbulence, advective crossflows, and complex mixing, predicting the location of a plume from point observations poses a considerable challenge for planning trajectories for a nonadaptive robotic platform.
  
-\paragraph{Contributions}
+% The problem of discovering a useful forward simulator for spatiotemporal is not impossible, however.
+% Decades of research have been dedicated to the recovery of environmental models by experimental trials and mathematical reasoning by scientists.
+% For instance, the Navier-Stokes equations, which describe the motion of viscous fluids, are the philosophical, mathematical, and experimental results of Leonhard Euler~\autocite{euler1757principes}, Claude-Louis Navier~\autocite{navier1822lois}, and George Gabriel Stokes~\autocite{stokes1851effect} stretching from 1757 to 1851. 
+% Each mathematician started from the knowledge of their predecessor(s), and extended the sophistication of the model in turn.
+% This is a natural scientific process, and it is a process that is well suited to inspire algorithmic adaptation.
+
+
+%%%%%%%%%%%%%%
+% Contributions
+%%%%%%%%%%%%%%%
+\section{Contributions}
 The contributions of this thesis are...
 
-
-% Thus the crux of the challenge: data driven probabilistic models require too much data to tractably learn simple dynamics that can be exploited for trajectory design, but numerical approximations of underlying dynamics may be too computationally expensive and brittle to real data to use instead.
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Hydrothermal Plume Charting
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Hydrothermalism in the Deep Ocean}
-\label{sec:charting-plumes}
-Hydrothermal vents in the ocean were first observed in 1977 at the Galápagos Rift~\autocite{corliss1979submarine}, and since have been discovered around the world and the subject of considerable geodynamical and biogeochemical study.
-Seafloor venting sites, energized by magmatic sources, release fluids between 20-\SI{400}{\celsius} (background deep ocean temperatures are approximately \SI{2}{\celsius}) and imbued with minerals, metals, dissolved gases, and other compounds~\autocite{jannasch1985geomicrobiology, martin2008hydrothermal}.
-These warm, nutrient-pumping sites in the deep ocean have created oases for unique micro- and macro-fauna~\autocite{corliss1979submarine}, and the venting fluids, called plumes, can deposit minerals and metals over kilometer scales CITE.
-Detection and characterization of seafloor hydrothermal venting are critical for  understanding fundamental interactions between the deep ocean, its underlying basaltic crust, the deep biosphere, and (bio)geochemical fluxes.
-
-Contemporary to the writing of this thesis, increased political and economic interests in mining seafloor resources, and environmental interests in sequestering reclaimed carbon in the deep ocean, have put a cultural spotlight on hydrothermalism and the oceanic crust.
-Questions related to mineral and metal deposition from plumes highlight the acute scientific need to better study not just hydrothermal vents themselves, but the plume structures that are produced by them which are the primary drivers of nutrient injection in the deep ocean biosphere.
-Scientific studies that benefit from directly charting the spatiotemporal structure of a plume include those which characterize the transport and deposition of particulates, the distribution and transport of biological materials (including microbes) in the deep ocean, and field-based statistical modeling of turbulent water mass mixing.
-
-Arguably beginning with the Morton, Taylor, and Turner (MTT) model for buoyant plumes derived in the 1950s~\autocite{morton1956turbulent}, and the re-derivation specifically for hydrothermal plumes in the late 1980s by Speer and Rona~\autocite{speer1989model}, our understanding of hydrothermal plumes is largely based on laboratory experiments and sparse, corroborating field measurements.
-These idealized models describe a roughly two part plume structure composed of a buoyant stem and a neutrally-buoyant layer. 
-The buoyant stem is a spatially small expression that describes the fluid that rapidly rises from an originating vent orifice, largely driven by buoyant forces that result in the different in density between the warm venting fluid and the ambient seawater.
-The neutrally-buoyant (or equivalently non-buoyant) layer describes the spatially large spread of vent-derived fluids along the isopycnal of equal density with the ambient seawater\footnote{Readers are referred to~\autocite{yoerger2007autonomous} for an illustrative description and figure.}. 
-In subsequent studies, state-of-the-art hydrothermal plume models incorporate time-varying Navier-Stokes models and more complicated fluid structures\footnote{e.g.,~\autocite{lavelle2013turbulent,xu2012deep}}.
-Mathematically, these models describe what has been practically well-understood in observational studies: the spatiotemporal distribution of plumes is instantaneously complicated and on small scales (meters, minutes) driven by compounding, chaotic factors that are difficult to calibrate.
-
-
-FIGURE HERE??? -- Plume description; images
-
-
-The complication of finely modeling hydrothermal plumes puts a fine point on the challenge of placing scientific instruments at the right place at the right time to gather an informative measurement for a scientific task.
-To chart hydrothermal plumes requires grappling with uncertainty over the underlying dynamics of a target environment due to the extreme partial observability of point \emph{in situ} measurements in a continuous three-dimensional volume over time influenced by complicated spatiotemporal dynamics of water mixing, tidal advection, and chaotic turbulence.
-The notion of uncertainty has implications for solving both the \emph{inverse} and \emph{forward} problem inherently posed in hydrothermal plume charting.
-Discovering the underlying model from a set of data, the inverse problem, is known to be ill-posed in spatiotemporal systems CITE, suggesting that the information content of every sample has an outsized effect on the accuracy of recovered dynamics.
-With a known dynamics model, forward simulating a model with uncertainty placed over initial conditions or descriptive parameters requires propagating that uncertainty forward.
-In time-dependent models, even modest amounts of uncertainty can accumulate quickly over short horizons CITE, yielding essentially uninformative predictive state estimates for planning.
-A principled treatment of uncertainty, particularly the identification of \emph{useful} uncertainty for planning, is necessary. 
-WORDS ON HOW PEOPLE HAVE THOUGHT ABOUT UNCERTAINTY IN HYDROTHERMAL SYSTEMS
-
-\section{Charting Deep-Sea Hydrothermalism}
-\label{sec:charting-plumes}
-Hydrothermal vents in the ocean were first observed in 1977 at the Galapagos Rift \autocite{corliss1979submarine}, and since have been a concerted focus of geodynamical and biogeochemical studies. Venting sites, energized by magmatic sources, release fluids between 20-\SI{400}{\celsius} (background deep ocean temperatures are approximately \SI{2}{\celsius}) and imbued with minerals, metals, dissolved gases, and other compounds \autocite{jannasch1985geomicrobiology, martin2008hydrothermal}. These warm, nutrient-pumping sites in the deep ocean have created oases for unique micro- and macro-fauna \autocite{corliss1979submarine}. Detection and characterization of seafloor hydrothermal venting are critical for understanding fundamental interactions between the deep ocean, its underlying basaltic crust, the deep biosphere, and (bio)geochemical fluxes.
-
-Hydrothermal plumes are driven by density differences between super-heated fluid at seafloor geothermal vents and the cold background seawater, creating a buoyancy force that causes the vent fluids to rise. The plume is typically chemical and particulate rich, and while rising through the water column, mixes (entrains) with the background seawater until it reaches a point of neutral buoyancy with the ambient seawater \autocite{speer1989model,jakuba2007stochastic,morton1956turbulent,lavelle2013turbulent}. At the neutrally-buoyant layer, fluid from the plume spreads out in a large plane (following an isopycnal of constant density). From this layer, metals, sediment, and other suspended particulates carried by the plume may drop out and be redeposited onto the seafloor, and any persisting chemicals diffused, reacted, or digested by microbes \autocite{scholz2019shelf,dick2013microbiology}. A robot tasked with charting a plume must be able to forecast where and when it will intersect with different parts of the plume in order to collect useful observations of its spatiotemporal structure, but the state is uncertain as a result of unseen advective forces (e.g., deep currents, topographic updrafts), diffusive mixing, and unknown venting characteristics that dictate plume formation. Point \emph{in situ} measurements in a continuous three-dimensional volume over time make the problem worse, as no single measurement is sufficient to locate the plume. 
-
-We build on a wealth of work that has primarily focused on localizing hydrothermal venting plume sources (e.g., \autocite{jakuba2007stochastic, mcgill2011robot, nakamura2013discovery, paduan2018discovery, mason2020evaluation, wang20203, kim2020discovery,ferri2010novel}) using a variety of equipment such as ship-based acoustics, towed instrument rosettes, remotely-operated vehicles (ROVs), human-occupied submersibles (HOVs), and autonomous underwater vehicles (AUVs). Specialized seafloor equipment is subsequently deployed at the inferred venting site to e.g., estimate bulk chemical or nutrient flux from the vent or characterize the driving magmatic system underneath the crust. Generally, vent localization approaches use detections of anomalous water masses (as determined from \emph{in situ} sensors) in the water column to constrain the location of a seafloor vent. The localization methods can be fully offline, in which surveys by vehicles like \Sentry with no adaptive capacity are post-processed and vent locations are inferred \autocite{jakuba2007stochastic,nakamura2013discovery}, or they can be fully online, in which autonomous gliders with adaptive capabilities utilize e.g., gradient descent to seek a plume source \autocite{wang20203}. In \autocite{branch2020demonstration}, an autonomous glider tasked with localizing a vent source adaptively chains uniform coverage trajectories with increasingly fine resolution as the robot position converges on an estimated vent location. We emulate this chaining in \PHORTEX, however the selection of trajectories is done completely offline before AUV \Sentry is deployed. Online strategies for hydrothermal plume hunting almost universally employ glider-type robot platforms, which are typically smaller, payload-limited, and less depth-capable than vehicles like \Sentry. 90\% of known vent fields are deeper than \SI{200}{\meter} in the ocean, and over 75\% are deeper than \SI{1000}{\meter} \autocite{beaulieu2013authoritative}. Gliders widely accessible to the research community are typically not rated deeper than \SI{1000}{\meter}, which means that deep-sea research is reliant on vehicles like \Sentry and demand advances in offline-suited planning techniques.
-
-We also draw on ``plume hunting'' research in robotics, which has been equivalently styled as odor mapping, odor localization, source localization, and source seeking. In these works, the source emits a substance (e.g., gas, radio, acoustic, odor) and through partial observations of the emitted substance, the source is discovered using techniques that can be divided broadly into biologically-inspired heuristic search (e.g., \autocite{reddy2022olfactory,chen2019odor}) or adaptive IPP (e.g., \autocite{salam2019adaptive}). Biological or heuristic techniques, including gradient-based algorithms like chemotaxis \autocite{morse1998robust}, or algorithms that directly mimic a particular animal \autocite{edwards2001representing}, tend to be reactive and myopic. In contrast, adaptive IPP can be nonmyopic, and algorithmically tends to embed knowledge (either heuristically or rigorously) about flow-fields (i.e., advection and diffusion) to assist in plume localization. Such techniques also live on a spectrum, from algorithms that resemble biologically-inspired approaches like infotaxis \autocite{vergassola2007infotaxis} to methods that use model order reduction techniques to encode complex numerical models (e.g., Navier-Stokes equations) into a belief model to better treat complex data \autocite{peng2014dynamic}.
-
-While source discovery remains an important area of research, in this article we focus on how science can be advanced at the hundreds of vents that have been successfully identified. Thus, we pose a complementary problem to source discovery: \emph{given a venting source, what impact do the venting fluids have on the local environment?} In this framing, rather than using detections of a plume as a means of source localization, the detections themselves are the valuable data product for scientific inquiry. By placing instruments throughout an evolving plume structure over multiple length- (meter to kilometer) and time- (hours to days) scales to collect dense in-plume measurements, previously intractable questions with respect to microbial lifecycle and transport, carbon cycling, and anomalous water mass formation, can be approached. Work that has used robots to map or chart plume-like structures has been presented as the ``front-tracking'' problem \autocite{li2014multi,chen2019odor}. In this problem, two water masses converge (such as the warm hydrothermal fluid and the cold background seawater), and the goal is to use a robotic vehicle to track the edge of these water masses or stay within a single type of water mass. The importance of both multirobot collaboration and online decision-making in these schemes is essential to their efficacy; as far as we are aware, this article is the first to present a water mass tracking solution within an offline optimization strategy with a single agent, and the first to attempt this for the hydrothermal charting problem.
-
-
-% The problem of charting hydrothermal plumes inherently requires grappling with uncertainty due to the extreme partial observability of point \emph{in situ} measurements in a continuous three-dimensional volume over time influenced by complicated spatiotemporal dynamics of water mixing, tidal advection, and chaotic turbulence. The challenge is exacerbated by the necessity of inferring future states of the plume distribution to enable planning informative trajectories for the robot. Charting hydrothermal plumes requires solving both an \emph{inverse problem} of extracting the dynamical representation from \emph{in situ} observations, and a \emph{forward problem} of simulating those dynamics into future states. In \PHORTEX, we explicitly tackle both of these problems in our belief representation framework \PHUMES, which blends a numerical hydrothermal plume model with Bayesian probabilistic representations that can be used to optimize AUV sampling trajectories for plume charting. 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Informative Path Planning
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Informative Path Planning in the Field}
-Oceanographic research expeditions are an undertaking that requires the coordination and collaboration of a science party, external engineering teams that maintain and operate the scientific equipment used during studies, and the captain and crew aboard a research vessel (on which everyone lives and works during operations). Deep-sea (depths below the mesopelagic zone starting at \SI{1000}{\meter}) capable robotic platforms used in oceanic research are assets independently maintained from a ship, and typically requested on a per-expedition basis. AUV \Sentry may be deployed on tens of expeditions in a given year, with up to 250 days at sea. Safety of both people and equipment are held to the highest importance. Further, the critical role of \Sentry in oceanographic research drives the strict operational policies that dictate \Sentry deployments to prevent vehicle loss or damage.
-
-It is with this context that \Sentry deployments are designed by the science party and ultimately approved by the \Sentry engineering team. In a typical workflow, the science party may provide a set of coordinates or waypoints they generate based on bathymetric maps, prior knowledge, or previous data (when available). The \Sentry team design survey trajectories based on these coordinates and respecting basic operational constraints of the vehicle (e.g., speed, minimum/maximum altitude from the seafloor). With approval of the \Sentry team, science party, and captain, the survey is then executed. A single ``dive'' of \Sentry is multiple hours (typically not less than 5 hours, and under 24 hours). At the conclusion of a dive, \Sentry is recovered from the ocean and data products containing hundreds of thousands of point measurements from multiple heterogeneous sensors are made available to the science team within a few hours after \Sentry returns to the deck. Depending on the length of the dive, 12-18 hours of vehicle cycling time (e.g., recharging, instrument maintenance, preparation for the next deployment) are required. Based on the length of a particular expedition and other ongoing research activities, \Sentry may be deployed only a handful of times.
-
-The complexity of these basic operations for \Sentry alone, in addition to the burden of coordinating several other ongoing scientific projects happening simultaneously, day-to-day operational changes, and unforeseen discoveries and hurdles make performing ``closed loop science'' with robot platforms a challenge while at sea. For hydrothermal plume monitoring, a combination of sensor streams need to be used to make confident plume detections~\autocite{jakuba2007stochastic}, but information about exact tidal state, state of the venting source, and background sea characteristics are typically not available in these products, and can require fusing data products from other instruments deployed on a cruise, if available. The planning challenge is further exacerbated when the design of a new mission requires not just deep analysis of the collected data, but forecasting the implications of those data onto a new day, new site, or new objective. 
-
-% Our work aims to alleviate the burden of closing the loop onboard a research vessel for AUV operations by positioning \PHORTEX as a means of generating interpretable phenomenon forecasts and trajectories through those forecasts that can be informed from diverse data streams, verified by science party members, and approved by \Sentry engineers. Algorithmically, the formulation of \PHORTEX as a sequential decision-making framework produces trajectories which are informed by previous observations, thus literally behaving like a closed-loop controller for robot actions. Through a real field mission to the Gulf of California to chart hydrothermal plumes in the northern Guaymas Basin, we demonstrate how \PHORTEX can be practically deployed for plume charting.
-
-%%%%%%%%%%55 Logistics
-\subsection{Closing the Loop: Expedition Logistics for Deep-Sea Robotics}
-Oceanographic research expeditions are an undertaking that requires the coordination and collaboration of a science party, external engineering teams that maintain and operate the scientific equipment used during studies, and the captain and crew aboard a research vessel (on which everyone lives and works during operations). Deep-sea ($>$\SI{200}{\meter} depth) capable robotic platforms used in oceanic research are assets independently maintained from a ship, and typically requested on a per-expedition basis. AUV \Sentry may be deployed on tens of expeditions in a given year, with up to 250 days at sea~\autocite{kaiser2016design}. Safety of both people and equipment are held to the highest importance. Further, the critical role of \Sentry in oceanographic research drives the strict operational policies that dictate \Sentry deployments to prevent vehicle loss or damage.
-
-It is with this context that \Sentry deployments are designed by the science party and ultimately approved by the \Sentry engineering team. In a typical workflow, the science party may provide a set of coordinates or waypoints they generate based on bathymetric maps, prior knowledge, or previous data (when available). The \Sentry team design survey trajectories based on these coordinates and respecting basic operational constraints of the vehicle (e.g., speed, minimum/maximum altitude from the seafloor). With approval of the \Sentry team, science party, and captain, the survey is then executed. A single ``dive'' of \Sentry is multiple hours (typically not less than 5 hours, and under 24 hours). At the conclusion of a dive, \Sentry is recovered from the ocean and data products containing hundreds of thousands of point measurements from multiple heterogeneous sensors are made available to the science team within a few hours after \Sentry returns to the deck. Depending on the length of the dive, 12-18 hours of vehicle cycling time (e.g., recharging, instrument maintenance, preparation for the next deployment) are required. Based on the length of an expedition and other ongoing research activities, \Sentry may be deployed only a handful of times.
-
-The complexity of these basic operations for \Sentry alone, in addition to the burden of coordinating several other ongoing scientific projects happening simultaneously, day-to-day operational changes, and unforeseen discoveries and hurdles, make performing ``closed loop science'' with robot platforms a challenge while at sea. For hydrothermal plume monitoring, a combination of sensor streams need to be used to make confident plume detections \autocite{jakuba2007stochastic}, but information about exact tidal state, state of the venting source, and background sea characteristics are typically not provided in these products, and can require fusing data from other instruments deployed on a cruise, if available. The planning challenge is further exacerbated when the design of a new mission requires not just deep analysis of the collected data, but forecasting the implications of those data onto a new day, new site, or new objective. 
-
-Our work aims to alleviate the burden of closing the loop onboard a research vessel for AUV operations by positioning \PHORTEX as a means of generating interpretable phenomenon forecasts informed from diverse data streams and trajectories through those forecasts that can be verified by science party members and approved by \Sentry engineers. Algorithmically, the formulation of \PHORTEX as a sequential decision-making framework produces trajectories which are informed by previous observations, thus literally behaving like a closed-loop controller for robot actions. Through a real field mission to the Gulf of California to chart hydrothermal plumes in the northern Guaymas Basin, we demonstrate how \PHORTEX can be practically deployed for plume charting.
-
-
-\subsection{Perceiving}
-Discovering hydrothermalism, classifying examples, processing sensors, not having access to ground truth.
-
-\subsection{Predicting}
-Utilizing observations for forward simulate an environment to strategize. PHUMES and PIKL.
-
-\subsection{Planning}
-Overcoming operational challenges and working within the framework of logistics at sea. Enabling decision-making not just by autonomous agents, but also by scientists/engineers.
+In this thesis, a novel idealized model for buoyant plume rise in crossflow (i.e., current/advective forces) is applied to the hydrothermal plume setting\autocite{tohidi2016highly} and coupled with a unique uncertainty representation framework to update the model from realistic field observations.
+In \cref{chap:phortex}, the model and belief representation is presented, and demonstrates 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Thesis Overview
