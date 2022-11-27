@@ -1,134 +1,393 @@
-\chapter{Background and Related Work}
+\chapter{Foundational Related Work}
 \label{chap:related_work}
-\td{get JFR paper content integrated}
 
-The research presented in this thesis is built on foundational work in probabilistic and scientific modeling, robotic planning under uncertainty, and geochemistry in order to develop tools that can discover, simulate, and track hydrothermal plumes in the deep sea.
-\td{some nice general statements about how this chapter will present some of the core concepts important to appreciating and understanding the work herein}
+\begin{center}
+    \begin{minipage}{0.7\textwidth}
+      \begin{small}
+        I may remark that the curious transformations many formulae can undergo, the unsuspected and to a beginner apparently impossible identity of forms exceedingly dissimilar at first sight, is I think one of the chief difficulties in the early part of mathematical studies. I am often reminded of certain sprites and fairies one reads of, who are at one's elbows in one shape now, and the next minute in a form most dissimilar.\\ \emph{Ada Lovelace}
+      \end{small}
+    \end{minipage}
+    \vspace{0.5cm}
+\end{center}
 
-\section{Measuring and Modeling Environmental Spatiotemporal Distributions}
+The research presented in this thesis is built on work spanning multiple fields, including numerical and scientific modeling, planning under uncertainty, robotics, geochemistry, and oceanography. In this chapter, background on topics closely related to the problem of hydrothermal plume charting and autonomous robotic sampling in field environments is broadly provided.
+
+%%%%%% 
+% Modeling
+%%%%%%
+\section{Representing Dynamic Systems}
+\label{sec:dyn_sys}
+Natural environments and the spatiotemporal distributions within them are dynamic systems.
+Dynamical systems are well represented in the form
+
+\begin{equation}
+    \dot{x} = f(x,t)
+\end{equation}
+
+\noindent where the function $f$ may be a nonlinear relationship, and the system may be either an ordinary (ODE) or partial (PDE) differential function (in the case of a PDE, appropriate boundary conditions may be additionally applied).
+
+While analytic forward solutions for some dynamic systems can be found, in most cases these are difficult to compute without significant simplifying assumptions. Numerical solutions, which rely on iterative methods, are more commonly employed. The \emph{finite difference method}\autocite{smith1985numerical} (FDM) is a popular technique for computing numerical solutions, and which reformulates PDEs into a system of equations that can be solved via matrix operations. To do this requires discretization over the time and space domains of a continuous problem. FDM can be derived from a Taylor series expansion of some function $f$ which is assumed to have proper derivatives:
+
+\begin{align}
+	f(x_i) &= f_i\\
+	f(x_{i-1}) &= f_i - \Delta x f'_i + \frac{\Delta x^2}{2}f''_i + ...\\
+\end{align}
+
+The goal is then to solve for one of the derivatives of $f$; for example the first derivative of the second expression can be rearranged such that:
+
+\begin{equation}
+	f'(x_i) = \frac{f(x_i) - f(x_{i-1})}{\Delta x} + \frac{\Delta x}{2}f''(x_i) + ...
+\end{equation}
+
+One of the advantages of FDM is the ability to select the accuracy of the desired approximation. Derived above is a first order accurate approximation of the first derivative, in which only the first term is kept. What is truncated from the solution induces an error on the order $O(\Delta x)$. Second-order accurate methods have an error term on the order $O(\Delta x^2)$, and so on.
+
+In general, adaptive sampling for expeditionary science is focused on predicting time-dynamics of a spatial distribution. Parabolic equations can be used to model these time-varying systems. The solution to a time-varying PDE/ODE is also known as the \emph{forward problem}: given some parameters and initial condition, find the state of the world at each (discretized) time step. The definition of the problem essentially requires iterative/sequential solvers to be used. For these problems, the iterative or time-stepping methods can be classified as either \emph{implicit} or \emph{explicit}\autocite{biswas2013discussion,hahn1991modified}. In an explicit method, only the current state is required to compute the next state; forward Euler is the most widely adopted explicit method, and takes the form:
+
+\begin{equation}
+	y^{n+1} = y^n + \Delta t f(y^n,t^n)
+\end{equation}
+
+\noindent where the next state of the system is a function of the current state incremented by the slope (represented by $f$) computed at the current state. In example, salt diffusion in a vertical water column can be expressed as a parabolic equation with the form:
+
+\begin{equation}
+	\frac{\partial s}{\partial t} = \frac{\partial}{\partial z}\Big(\kappa \frac{\partial s}{\partial z}\Big)
+	\label{eqn:salt}
+\end{equation}
+
+\noindent and using the forward Euler scheme, this system can be expanded according to the FDM with the addition of a time step $\Delta t$ and corresponding increment $n$:
+
+\begin{equation*}
+	\frac{s_k^{n+1} - s_k^{n}}{\Delta t} = \frac{1}{\Delta z}(F_k^n - F_{k-1}^n)
+\end{equation*}
+
+Substituting the flux terms and rearranging the equation:
+
+\begin{equation}
+	s_k^{n+1} = \Delta t\Big[s_{k+1}^n\Big(\frac{\kappa_k}{\Delta z_k \Delta z_{k+1}}\Big) + s_k^n\Big(\frac{-\kappa_k}{\Delta z_k \Delta z_{k+1}}+\frac{-\kappa_{k-1}}{\Delta z_k^2} + \frac{1}{\Delta t}\Big) + s_{k-1}^n\frac{\kappa_{k-1}}{\Delta z_k^2}\Big]
+\end{equation}
+
+A linear system $Ax = b$ can be defined wherein $A$ takes the form of a tridiagonal matrix of coefficients, $x$ is the current value of the target of interest (e.g., salinity), and $b$ is the value of the target of interest at the next time increment. With this form, a straightforward loop can be used which computes $b$ at each time step and substitutes $b$ for $x$ in the following time step. 
+
+Implicit methods, like backwards Euler, take a form which requires knowledge of the future state in order to compute that future state.
+
+\begin{equation}
+	y^{n+1} = y^n + \Delta t f(y^{n+1},t^{n+1})
+\end{equation}
+ 
+Following from the derivation of the implicit form, backwards Euler can simplify to a linear equation $Ax = b$, but where $x$ is the future state and $b$ is the current state. To solve for $x$ an iterative solver (e.g., Jacobi\autocite{forsythe1960cyclic}, Gauss-Seidel\autocite{usui1994adaptive}) can be integrated directly into an outer loop which performs the forward time step.
+
+As compared to explicit methods, implicit methods are more expensive to compute because of a necessary system solve needed at every time step. However, what trade-off exists in speed is compensated for with stability: using various stability techniques (e.g., Von Neumann\autocite{wesseling1996neumann}) it can be shown that implicit techniques are unconditionally stable for any possible spatial or temporal discretization. In contrast, explicit methods require a constraint on these discretization parameters with respect to the characteristic lengthscale of the phenomenon in order to be numerically stable. To improve stability of explicit methods, advanced time-incrementing methods which can adaptively change the time step based on residual characteristics could be employed.
+
+\subsubsection{Model Order Reduction}
+For very large systems, even iterative methods are too expensive to compute. A subfield of study in numerical computation is therefore focused on \emph{model order reduction}: reducing a large state space into a lower rank embedding (reduced state space, reduced feature space) which can approximate the system dynamics to some selectable error. There are many different model order reduction techniques which can be employed for dynamical systems.
+
+\paragraph{Proper Orthogonal Decomposition (POD)} POD is perhaps the most common method adopted for fluid studies and reduces the dimensionality of a problem by transforming original unknowns (e.g., salinity in each voxel of a water column) into a new set of variables called modes or principal components\autocite{lassila2014model}. By virtue of the transform, the first few modes will describe well (i.e., contain most of the ``energy'' of) the original unknowns. This is accomplished by performing a statistical analysis on ``snapshots'' of the system computed from several expensive simulations on the full-state of the system (or from observed data, if available). These simulations are used to create a database $x$  and an optimization problem is posed:
+
+\begin{equation}
+	P* = \min_P\mathbb{E}[x - Px]^2
+\end{equation}
+
+\noindent where a projection operator $P$ needs to be selected such that the error between the original data and transformed data is minimized. In general, the transform that satisfies this optimization is an orthonormal projection in which the modes are the ordered orthonormal eigenvectors of the covariance matrix of $x$ (thus why this is a statistical analysis technique).
+
+Although POD is one of the most popular model order reduction techniques, it suffers from several practical limitations. First, the method relies on access to ``snapshots'' of the system in order to learn the basis.  On truly large systems this may be prohibitively expensive or impossible; in field settings for the deep sea, access to full snapshots is the latter. Further, POD relies on samples of $x$ being independent, however as a general rule this cannot be assumed in practice. Finally, although the modes may fit a dataset of snapshots well, the modes may not generalize the underlying dynamics of the system well (e.g., it may be incorrect when asked to project outside of the domain of the training data). Some of these concerns have been addressed by computing the covariance matrix via the controllability Gramian of the system, rather than directly from the snapshots, with the idea that the controllability Gramian generalizes the dynamics better than the snapshots do alone\autocite{georges1995use,zhao2019networks}.
+
+\paragraph{Reduced Basis Methods} Like POD, reduced basis methods have an expensive ``offline'' training period in order to extract lower-rank modes which capture features of the dynamic system and which can be used quickly in online settings\autocite{ohlberger2015reduced}. In particular, reduced basis methods attempt to find a reduced system of nonlinear equations with a significantly smaller set of unknowns which captures the describes the behavior of the larger system. This is done by applying the Rayleigh-Ritz method (also known as the Galerkin method) on the finite-element form of the eigenvalue problem posed by the PDE, $Ax = \lambda x$ where $A\in\mathbb{C}^{N\times N}$, which yields Ritz pairs $(\tilde{\lambda}_i, \tilde{x}_i)$ which approximate the solution\autocite{noor1980reduced}. To do so requires the computation of an orthonormal basis $V \in \mathbb{C}^{N\times m}$ where $m << N$ which approximates the eigenspace of $m$ eigenvectors.
+Then, the reduced eigenvalue problem can be posed $Rv_i = \tilde{\lambda}_iv_i$ where $R \longleftarrow V^TAV$. The resulting Ritz pairs take the form $(\tilde{\lambda}_i, \tilde{x}_i) = (\tilde{\lambda}_i, Vv_i)$.
+
+Selecting the right orthonormal basis $V$ is the critical challenge for this method. In~\cite{quarteroni2007numerical}, reduced basis methods for solving the Navier-Stokes equations using Lagrangian, Taylor, and Hermite spaces are examined; Lagrangian subspaces tend to be the most popular selection for reduced basis methods. Historically, reduced basis methods have struggled to describe advective systems which display considerably nonlinear behavior\autocite{quarteroni2007numerical,ohlberger2015reduced}.
+
+\paragraph{Fourier Modes} Fourier modes are the result of applying a model order reduction technique on a dynamical system in Fourier space. This form of analysis is popular in works which attempt to place an upper bound on the theoretically finite number of \emph{determining modes} for system, which are a set of parameters used to fully define turbulence or similarly complex structure~\cite{jones1993upper}.
+
+\paragraph{Locally Linear Embedding} Locally linear embedding (LLE) is a dimensionality reduction technique that, similar to POD and reduced basis functions, is an eigenvector method and is typically used to perform manifold transformation\autocite{saul2000introduction}. The idea relies on the geometric intuition that points which lie close together on a manifold may be in a locally linear patch, wherein the patch can be described by linear coefficients that allow each data point in the patch to be reconstructed by its neighbors. These weights can be found by minimizing reconstruction errors $E(W) = \sum_i | x_i \sum_j w_{ij}x_j|^2$ (the simple Euclidean distance between points), equivalently solving the least squares problem.
+A constraint is additionally placed such that $\sum_j w_{i,j} = 1$. By virtue of the posed constrained optimization problem, the vector of weights for each patch are invariant to rotation, scaling, or translation operations on the data. Thus, these weights can be used to find a valid low-dimensional casting of the original data which preserves their relatedness. This is done by minimizing a new cost function 
+
+\begin{equation}
+\phi(Y) = \sum_i|y_i - \sum_j w_{ij}y_j|^2
+\end{equation}
+
+\noindent where the weights are fixed and the new coordinates $Y$ in some reduced dimensional space are found. \emph{Linear local tangent space alignment} (LLTSA) extends LLE by using the tangent space of each local geometric patch on a high-dimensional manifold in order to define the tangent spaces for the low-dimensional casting\autocite{zhang2007linear}.
+
+\paragraph{Dynamic Mode Decomposition} Dynamic Mode Decomposition (DMD) is a dimensionality reduction technique which reduces a dynamic system into a set of weighted basis functions which are associated with fixed phase/oscillation modes and growth/decay rates in time\autocite{schmid2010dynamic}. In linear systems, DMD modes are \emph{composition operators} (normal modes) or Koopman operators. Explicitly, DMD is tasked with recovering the eigenfunctions of a linear map $A$, such that $v_{i+1} = A v_{i}$. To discover $A$, single value decomposition (SVD) or similar approaches can be applied to a series of snapshots in time for a given system. The advantage of DMD as opposed to other reduction techniques is that it can explicitly represent temporal data; however it also means that DMD is a less stable methodology since there are few constraints on the computed embedding space (e.g., orthogonality). There are several extended methods associated with finding the DMD basis of a given system\autocite{chen2012variants}: optimized DMD (to reduce sensitivity to noise), optimal mode decomposition (sets the rank of the decomposition), exact DMD (pairwise snapshots), sparsity promoting DMD, multi-resolution DMD, extended DMD (more explicit connection to the Koopman operator), dynamic distribution decomposition (finds the forward transfer operator).
+
+\paragraph{Koopman Operators} Koopman operators can be thought of as a set of weighted functions, and are adjoint to the transfer operator (forward simulation in dynamical systems). With respect to dynamical systems, the discovery of Koopman operators (or at least approximation of such) is typically easier than approximation of Lyapunov functions (a ``true'' composition operator for a system), and so is used as a stand-in. The fundamental expression of the Koopman operator is $\mathcal{K}(g) = g \circ f$ where $g$ is the output map and $f$ is a vector map; the formulation directly states that the Koopman operator is a linear operator on an infinite-dimensional space of observables. A good overview of the Koopman operator is provided in detail in~\cite{bruce2019koopman}.
+
+
+%%%%
+% Inverse problems
+%%%%
+\section{Inverse Problems in Environmental Science}
 \label{sec:measure_and_model}
-\td{really nice section like this in master's thesis -- adopt and expand here, particularly thinking about ocean contexts and models}
+An inverse problem is posed when (possibly hidden) model parameters need to be recovered from (possibly noisy and indirect) observations.
+For instance, from observations of particulate concentration in the atmosphere, the source of those particulates could be recovered by inverting an advection-diffusion model.
+In environmental sciences, solving inverse problems from field data can be difficult for several reasons\autocite{arridge2019solving}: 
 
-\section{Informative Path Planning for Robotic Adaptive Sampling}
+\begin{enumerate}
+	\item The number of unknowns and the observables may have different dimensionality.
+	\item The data may be an incomplete snapshot of the state of a domain of interest.
+	\item The map between the data and the state space may be rank deficient (uniqueness may not be guaranteed).
+	\item Observations may be noisy or corrupted.
+	\item Nonlinear systems are inherently difficult to work with.
+	\item Most inverse problems are ill-posed; noise in the data can lead to large errors in the model parameter.
+\end{enumerate}
+
+Let an inverse problem take the form $y = \mathcal{A}(\theta) + \epsilon$, where $y \in Y$ is the measured data, $\theta \in \Theta$ is a set of model parameters, $\epsilon$ is observational noise, and $\mathcal{A} : \Theta \longrightarrow Y$ is the \emph{forward operator} which maps the parameter space to the observational space. Examples of $\mathcal{A}$ in environmental science could be the advection-diffusion equations, the Navier-Stokes equations\autocite{euler1757principes,182navier2lois,stokes1851effect}, or a model of buoyant plume rise\autocite{speer1989model,lavelle2013turbulent}.
+
+One method to approach solving inverse problems is to use ``knowledge-driven'' techniques to place some conditions on the form and quality of the data in order to guarantee a unique solution at a desired accuracy. Regularization methods are a particularly pervasive strategy in many fields (often used in machine learning in the context of preventing overfitting\autocite{srivastava2014dropout}) and can either be explicitly or implicitly applied. In explicit regularization, a term is added to the optimization problem in the form of prior information, penalties, or constraints, which act to impose a unique solution\autocite{engl1996regularization,benning2018modern,iglesias2013ensemble}. Implicit regularization, common in machine learning, takes advantage of training techniques like stochastic gradient descent\autocite{bottou2010large,amari1993backpropagation} and optimization characteristics like epochs or training iterations, to control fitting. A challenge with solving inverse problems with regularization is the requirement to have access to a well-defined forward model. While many environmental models are useful, they are always approximations. Suspending this challenge, the most precise environmental models are typically systems of time-dependent PDEs, which can be computationally expensive to run---approaching intractability for even small systems of fluid equations, for example.
+
+Another method for solving inverse problems is to use fully ``data-driven'' techniques which learn parameters for a generic representation such that the trained parameters and representation together have useful predictive power over the space of observations. Machine learning methods\footnote{e.g.,~\cite{lu2020extracting,follmann2019predicting,blanchard2019learning,chen2019presentation,pathak2018model}} and model order reduction (\cref{sec:dyn_sys}) or latent space transformations\autocite{bigoni2019greedy,spantini2018inference} are common techniques. Transferability/generalizability, interpretation, and data-efficiency are key challenges to adopting data-driven methods for scientific settings in which the trained model may be a desirable scientific product or tool for planning future missions, or in which limited field data is available.
+
+This section will provide an overview two additional approaches to inverse methods which attempt to blend knowledge-based and data-based techniques. In \emph{Bayesian inference} methods, a notion of uncertainty is used to provide relative estimates of probability over a set of inverse solutions, useful for when data is noisy, the model may be imperfect, and other regularization methods may not be well-suited\autocite{stuart2010inverse}. In \emph{scientific machine learning}, explicit computation of solutions is attempted with hybrid learning-knowledge frameworks, in which knowledge is encoded as a layer to a data-driven process\autocite{baker2019workshop}.
+
+\subsection{Bayesian Inference Techniques}
+Bayes' Theorem\autocite{bayes1763lii} describes the probability of an event given prior knowledge, evidence, or observations that may be related to the event:
+
+\begin{equation}
+    \Pi(\theta | y) = \frac{\Pi(y | \theta)\Pi(\theta)}{\Pi(y)}
+\end{equation}
+
+\noindent where the \emph{posterior distribution} of a set of parameters (event) $\theta$ given a data set $y$ is proportional to the \emph{likelihood} of the data given the parameters and the \emph{prior distribution} on the parameters. In practice, exactly solving Bayes' Theorem in inference frameworks is computationally intractable, as it requires computing the \emph{marginal distribution} over the data (the denominator above), which is exponential in the number of latent parameters. Instead, approximate techniques are employed.
+
+\paragraph{Variational Bayesian Inference}
+Variational Bayesian Inference (often stylized as Variational Bayes) approximates the posterior distribution with a well-behaved function class\autocite{wainwright2008graphical,bishop2006pattern}, $q^*(\theta) \approx \Pi(\theta | y)$. To identify $q^*(\theta)$ from the set of all $Q$ in the class, an optimization problem over some distance measure $f$ is performed:
+
+\begin{equation}
+    q^*(\theta) = \argmin_{q\in Q} f(q(\cdot),\Pi(\cdot|y)).
+\end{equation}
+
+The Kullback-Leibler (KL) divergence\autocite{kullback1951information}, KL($\cdot||\cdot$), is a common choice for the distance metric as it has empirically good performance\cite{bishop2006pattern} and leads to a convenient simplification for the optimization problem:
+
+\begin{equation}
+    \text{KL}(q||\Pi(\cdot|y)) = \log \Pi(y) - \int_\Theta q(\theta) \log \frac{\Pi(\theta)\Pi(y|\theta)}{q(\theta)}d\theta
+\end{equation}
+
+\begin{equation}
+    q^*(\theta) = \argmax_{q\in Q} \int_\Theta q(\theta) \log \frac{\Pi(\theta)\Pi(y|\theta)}{q(\theta)}d\theta
+\end{equation}
+
+\noindent where the \emph{evidence lower bound} (ELBO) of the KL divergence can be used in the optimization; this is advantageous as the ELBO only contains well-defined aspects of the model.
+Choosing a class of well-behaved distributions, $Q$ is another important choice in this methodology. A common choice is the mean field approximation, $Q = \{q: q(\theta) = \prod_{i=1}^n q_i(\theta_i)\}$, which admits low-dimensional representations and guarantees that the set of distributions over parameters $\theta$ factorizes. Coordinate ascent approaches can be used to solve the optimization problem with this class of distributions\autocite{wainwright2008graphical}. Stochastic variational inference (SVI)\autocite{hoffman2013stochastic} and automatic differentiation variational inference (ADVI)\autocite{kucukelbir2017automatic} are extensions of vanilla variation inference that leverage assumptions of conjugacy or differentiable properties to accelerate optimization.
+
+\paragraph{Monte Carlo Methods}
+Monte Carlo (MC) methods make use of the law of large numbers and simulation to approximate the posterior $\Pi(\theta|y)$ instead of performing an optimization over analytic functions\autocite{mackay1998introduction}. Defining a \emph{proposal density} $q(y)$, which is a simplification of the true density $\Pi(y)$, samples from $q(y)$ are drawn and estimators $\Psi$ of a function (simulator) $\psi(\cdot)$ are computed. In general, MC methods require that the form of $\Pi(y)$ is known (and can be evaluated to within a multiplicative constant), but must be approximated by $q(y)$ because it may be difficult to draw samples from directly (e.g., too high-dimensional, not known in an analytic form). One of the most straightforward MC methods is importance sampling\autocite{glynn1989importance}:
+
+\begin{enumerate}
+    \item Draw $\x_1,...,x_N$ i.i.d. samples from $q(\cdot)$.
+    \item Calculate weight $w_i = \Pi(x_i) / q(x_i)$.
+    \item Calculate estimate $\Phi = \sum_{N} w_i \phi(x_i) / \sum_N w_i$.
+\end{enumerate}
+
+Rejection sampling\autocite{mackay1998introduction}, another MC sampler, encodes the notion that $q(y)$ may not necessarily align well with $\Pi(y)$. An acceptance criteria for sample $x_i$ is defined with the rule $\Pi(x_i) > u$ where $u$ is a draw from a uniform distribution with bounds [$0, q(x_i)$]. Even with this approach, it is generally required that $q(y)$ lie near the form of $\Pi(y)$ for MC methods; however, in large complex systems it may be difficult to define a single density that captures all of the characteristics of the true underlying distribution. Markov Chain MC (MCMC) methods directly address this issue by drawing new samples $x'$ using a proposal density which is informed by the state of the previous sample $x^{(t)}$, $q(x',x^{(t)})$. In Metropolis-Hastings MCMC\autocite{liu1996metropolized,metropolis1953equation}, an acceptance ratio is used to transition between samples:
+
+\begin{equation}
+    a = \frac{\Pi(x')q(x^{(t)}; x')}{\Pi(x^{(t)})q(x'; x^{(t)})}
+\end{equation}
+
+\noindent in which if $a \geq 1$ the new sample $x'$ is accepted, and $x^{(t+1)} = x'$; otherwise the sample is rejected, a new $x'$ is proposed, and $x^{(t+1)} = x^{(t)}$. Other MCMC samples, like Gibbs\autocite{mackay1998introduction}, Reversible-Jump\autocite{green1995reversible}, and Hamiltonian\autocite{neal2011mcmc} use different acceptance ratios of special forms of $q(y)$ in order to improve the convergence characteristics, flexibility, and speed of Metropolis-Hastings.
+In all MCMC samplers, since each new sample relies on the previous accepted sample, the chain of samples that are accepted must be ``burned-in'' before a chain of virtually independent samples can be generated and used to computed estimates of $\Phi$. For a sufficiently large number of samples, MC and MCMC methods are guaranteed to converge to the true estimator of the posterior\autocite{mackay1998introduction}.
+
+
+\subsection{Bayesian Representations}
+In the most notional form, Bayesian representations are any (algorithmic) frameworks which can be used to exploit Bayes' Theorem and related computational approximations by virtue of its form.
+
+\paragraph{Graphical Models}
+Probabilistic graphical models (PGMs) exploit the conditional independence structure of the latent parameters in $\theta$ in order to represent complex relationships between those parameters during inference. Bayesian networks\autocite{ghahramani2001introduction,aguilera2011bayesian,Arora2017} can be defined as an acyclic graph $\mathcal{G} = (V, E)$ where vertices $V$ represent random variables (the latent parameters), and directed edges represent dependencies between two variables indexed $(i, j) \in E$ with $i$ as a parent to $j$. The joint probability of $V$ in the graph is the product of all conditional probabilities $\Pi(\theta_j | \text{parents}(\theta_j))$. In highly connected or otherwise complex networks, exact inference may be intractable; in these cases variational and MCMC techniques can be used. 
+
+\paragraph{Parametric Models}
+Parametric models are a data-driven technique that identify a set of parameters for inference, and then ``fit'' those parameters to a portion of data known as a training set. The fitting procedure may be solving an inverse problem over some analytic or probabilistic forward model that converts the set of parameters to the space in which data is available\autocite{puonti2016fast}, or using Expectation-Maximization (EM) to iteratively find local maxima for estimates of the maximum \emph{a posteriori} estimator for parameters\autocite{moon1996expectation}. A test set of data is used to assess the parametric model's accuracy in a process known as cross-validation. Using accuracy on a withheld test set as a metric, different numbers or types of parameters can be designed for desired performance. One form of parametric model, finite mixture models\autocite{figueiredo2002unsupervised}, in the state-of-the-art can automatically tune for number of parameters.
+
+\paragraph{Nonparametric Models}
+In contrast to parametric models, nonparametric models are \emph{infinite} mixtures, allowing for more expressivity and avoiding the need to determine \emph{a priori} the number of parameters to learn. Dirichlet processes\autocite{ferguson1973bayesian}, Chinese Restaurant processes\autocite{griffiths2003hierarchical}, and Gaussian processes\autocite{Rasmussen2004} are all types of nonparametric model. 
+
+The latter, GPs, have seen considerable widespread adoption in environmental science and robotic sampling\footnote{e.g., \autocite{Srinivas2012,krause2008near,ouyang2014multi,kleiber2012daily,cahill2015modeling,wan2017reduced, ma2017informative, Marchant2014a,flaspohler2019information,luo2018adaptive,guestrin2005near}}. Informally, a GP is used to represent a distribution over functions. Formally,~\cite{Rasmussen2004} defines a GP as \emph{a collection of random variables, any finite number of which have a joint Gaussian distribution.} Functionally, for modeling the distribution of some environmental phenomenon, let an inference target be represented as a $d$-dimensional compact set $\mathbb{X} \subset \mathbb{R}^d$ and the unknown underlying distribution be $m$-dimensional continuous function $f : \mathbb{X} \longrightarrow \mathbb{R}^m$. Samples of $f$ can be drawn in a location $\x$ with a noisy sensor $y = f(\x) + \eta$ where $\eta \sim \mathcal{N}(0, \sigma_n^2)$ is normally distributed sensor noise. A GP is fully specified by a mean function $\mu(\x) = \mathbb{E}[f(\x)]$ and covariance (or kernel) function $\kappa(\x,\x') = \mathbb{E}[(f(\x) - \mu(\x))(f(\x') - \mu(\x'))]$. With a history of observations, $\mathcal{D}_t = \{\x_i, y_i\}_{t=0}^D$ of $D$ observations at time $t$, the posterior belief $\Pi(\x' | \mathcal{D}_t)$ at a new location $\x' \in \mathbb{X}$ is:
+
+\begin{equation}
+    \Pi(\x' | \mathcal{D}_t) \sim \mathcal{N}(\mu_t(\x'),\sigma_t^2(\x'))
+\end{equation}
+
+\begin{equation}
+    \mu_t(\x') = \kappa_t(\x')^T(\mathbf{K}_t + \sigma_n^2\mathbf{I})^{-1}\mathbf{y}_t
+\end{equation}
+
+\begin{equation}
+    \sigma_t^2(\x') = \kappa(\x',\x') - \kappa_t(\x')^T(\mathbf{K}_t + \sigma_n^2 \mathbf{I})^{-1}\kappa_t(\x')
+\end{equation}
+
+\noindent where $\mathbf{y}_t = [y_0,...,y_{D-1}]^T$, $\mathbf{K}_t$ is the positive definite kernel matrix with $\mathbf{K}_t[i,j] = \kappa(\x_i,\x_j) \forall \x_i,\x_j \in \mathcal{D}_t$ and $\kappa_t(\x') = [\kappa(\x_0,\x'), ..., \kappa(\x_{D-1},\x')]^T$. Typically, $\mu(\x)$ is selected to be the zero function, and the kernel function is primarily used to encode the relationship between features in the environment. Training the hyperparameters of a kernel function can be employed using, e.g.,~\cite{bergstra2011algorithms}.
+
+For spatiotemporal distributions, notable challenges remain in using GP models. Several kernel functions have been formulated that can model stationary and time-varying distributions\autocite{singh2010modeling, garg2012learning, chen2022ak, raissi2018numerical}, however it is assumed that there is considerable access to data for training the hyperparameters for these kernels and they have limited predictive capability, which is a core capability necessary for informative planning in natural environments. Recent work embedding numerical models into GP covariance kernels\autocite{raissi2018numerical} and utilizing learned latent spaces\autocite{wilson2016deep,al2017learning,wilson2016stochastic,sun2018differentiable,wang2022physics,wan2017reduced,you2017deep,whitman2017learning,kingravi2016kernel} are promising areas for future adoption of GPs for spatiotemporal settings, but have yet to be demonstrated effectively on realistic data that could be collected in the field\autocite{ober2021promises}.
+
+
+\subsection{Scientific Machine Learning}
+Under the moniker of scientific machine learning (SML), a growing field of research aims to learn governing equations in the sciences from data by combining traditional numerical techniques and state of the art machine learning and probabilistic frameworks. The ``combination'' of techniques may be as straightforward as adding a PDE or ODE solver as a layer in a neural network\autocite{pakravan2020solving} or in the loss function at training time\autocite{raissi2019physics}, to as nuanced as defining kernels over pairs of states using finite element discretizations\autocite{raissi2018numerical}. Physics-informed neural networks (PINNs)\autocite{raissi2019physics,tartakovsky2018learning} explicitly apply constraints from numerical modeling (e.g., constitutive properties, invariants) to guide the learning problem, and other techniques like PDE-Net\autocite{long2017pde} structure memory flows through convolution kernels to emulate finite difference operations. Regardless of the technique employed, SML methods are particularly powerful for spatiotemporal modeling because they inject structure to the learning problem, which can selectively control the learned feature space or more quickly converge to reasonable state predictions by imposing constraints on valid next-states according to first principles. One challenge for all of these methods is overcoming high-dimensionality in the state and parameter spaces.
+Recent work on developing scalable simulations for large environmental systems show that good latent embedding spaces yield statistically equivalent state predictions to the true state of the world\autocite{qian2020lift,mardt2020deep,baddoo2022kernel,baddoo2021physics}. For example, Compressed ConvLSTM\autocite{mohan2019compressed} ``compresses'' large input data with a convolutional autoencoder into a low-dimensional subspace which is passed to a convLSTM and decoded to yield a state prediction. Preliminary results show that the network is able to predict 3D atmospheric turbulence with considerable statistical accuracy. 
+
+Although it may not be considered SML canonically, there are many learning frameworks which attempt to recover PDEs from data by using neural networks to function-fit measurements\autocite{berg2019data,kaiser2018sparse} or simultaneously select a model from a library of governing equations and train it's parameters\autocite{rudy2017data,sun2020neupde}. Reservoir computing networks have seen increased popularity in the sciences because of their ability to handle high-dimensional state spaces gracefully and ability to learn characteristics, like Lyapunov exponent, useful for characterizing traditional PDEs\autocite{pathak2017using}. Learning stability characteristics about data, rather than performing state prediction, has been demonstrated by other networks which applied constraints on learned latent subspaces\autocite{blanchard2019learning}.
+
+Like GPs with sophisticated kernels, SML systems have yet to be rigorously applied to field data for environmental recovery, or in extremely partially-observable domains, let alone for planning sampling trajectories. However, some recent methods in control theory\autocite{chee2022knode,jiahaoonline,gan2020data} have shown promise that some SML representations could extend to practical-time operations for robotic tasks, and are worth considering as the field matures in future work.
+
+
+
+
+%%%%%%%
+% IPP
+%%%%%%%
+\section{Environmental Sensing as Adaptive Sampling}
 \label{sec:ipp}
-Adaptive sampling is the art of collecting samples of some \emph{a priori} unknown function to strategically assist in the recovery of the unknown function or assist in performing a specific task by analysis of a previous history of observations. Informative path planning (IPP) is an approach for approximately solving adaptive sampling problems in a sequential decision-making setting under uncertainty (e.g., problems that can be defined as a POMDP as in \cref{chap:problem}) by approximating the reward of a task with an information-theoretic function to elicit exploration and exploitation behaviors while a robot is underway. Some common reward functions include the upper-confidence bound\autocite{agrawal1995sample,auer2002using,snoek2012practical}, probability of improvement\autocite{snoek2012practical,kushner1964new}, expected improvement\autocite{snoek2012practical,jones1998efficient}, and predictive entropy search\autocite{hennig2012entropy,hernandez2014predictive}. Canonical offline IPP techniques for pure information-gathering that optimize submodular (i.e., diminishing returns) coverage objectives can achieve near-optimal performance\autocite{Srinivas2012, binney2012branch}. Existing methods in IPP\footnote{e.g., \autocite{Hitz2017,hollinger2013sampling,flaspohler2019information,levine2010information,binney2012branch}}, the related field of experimental design and optimal sensor placement\footnote{e.g., \autocite{krause2008near,wang2019reinforcement}}, and general decision-making under uncertainty\footnote{e.g., \autocite{sunberg2018online, somani2013despot, kocsis2006bandit, Silver2010}} have demonstrated that sequential decision making can be applied to sample-collection scenarios in which online, adaptive behaviors are possible, the phenomenon of interest is static, and/or there is an opportunity to train the belief model from many trials and multiple sensors. Each of these typical scenarios is violated for the expeditionary science sampling problem---online adaptation is not possible, the phenomenon is dynamic, and there are very few total number of deployments for model training.
+Adaptive sampling is the art of collecting samples of some \emph{a priori} unknown function to strategically assist in the recovery of the unknown function or assist in performing a specific task by analysis of a previous history of observations. For adaptive sampling, an environmental model is useful for representing an agent's belief about the state of the target distribution, however, a planning model must also be specified. A planning model specifies agent dynamics, available actions, and the mission objective. Informative path planning (IPP) is an approach for approximately solving adaptive sampling problems modeled as \emph{sequential decisions} in which actions are taken, executed, and evaluated over several iterations. Sequential decision-making is considered Markovian when an action selection is conditionally independent of previous history when using an updated belief representation (with respect to both environmental and agent states). Markov decision processes\autocite{howard1960dynamic,bellman1957markovian} (MDPs) are a useful model for robotic planning problems, and is represented as a tuple $(\mathcal{S}, \mathcal{A}, T, R, \gamma, s_0)$ where:
+
+\begin{itemize}
+	\item $\mathcal{S}$ is the set of finite or infinite (in the case of continuous functions) decision states
+	\item $\mathcal{A}$ is the set of finite or infinite (in the case of continuous actions) actions that are available to the vehicle, $\mathcal{A}_s$ is the set of actions available from state $s$.
+	\item $T : \mathcal{S} \times \mathcal{A} \to \mathcal{P}(\mathcal{S})$ is the transition function which represents the probability density of being in state $s \in \mathcal{S}$, taking action $a \in \mathcal{A}$, and arriving in state $s' \in \mathcal{S}$; $T(s,a,s') = \mathbf{Pr}(\mathcal{S}_{t+1} = s' | \mathcal{S}_t = s, \mathcal{A}_t = a)$. This allows for imperfect dynamics in either the robot control or the modeled environment.
+	\item $R : \mathcal{S} \times \mathcal{A} \to \mathbb{R}$ is the reward function, which represents the value of performing some action $a \in \mathcal{A}$ when in state $s \in \mathcal{S}$. Can alternatively be $R : \mathcal{S} \times \mathcal{A} \times \mathcal{S} \to \mathbb{R}$ if value is awarded by arriving into a state $s' \in \mathcal{S}$ from state $s \in \mathcal{S}$ after taking an action $a \in \mathcal{A}$.
+	\item $\gamma$ is the discount factor which is applied in infinite-horizon missions.
+	\item $s_o$ is the initial decision state.
+\end{itemize}
+
+A \emph{policy} $\pi : \mathcal{S} \to \mathcal{A}$ which maps decision states to actions is a solution to an MDP.
+An optimal policy $\pi^*$ describes the set of actions to take from any given state that maximize the total (potentially discounted) reward for a $h$-horizon mission (in which $h$ can be infinity):
+
+\begin{equation}
+\pi^* = \argmax_{\pi} \mathbb{E}\bigg[\sum_{t=0}^{\inf} \gamma^t R(s_t, a_t) | s_0, \pi\bigg]
+\label{eq:optimal_policy}
+\end{equation}
+
+The optimal policy from state $s \in \mathcal{S}$ can be determined using \emph{value iteration}, which iteratively estimates the value of the optimal policy using the Bellman equation\autocite{bellman1957markovian}:
+
+\begin{equation}
+\begin{split}
+&V_{t+1}^*(s) \leftarrow \max_{a \in \mathcal{A}}\bigg[\sum_{s' \in \mathcal{S}} T(s,a,s')(R(s,a,s') + \gamma V_t(s'))\bigg] \\
+&\pi^*(s) = \argmax_{a \in \mathcal{A}}\bigg[\sum_{s' \in \mathcal{S}}T(s,a,s')(R(s,a,s') + \gamma V^*(s'))\bigg].
+\end{split}
+\end{equation}
+
+For a threshold $\epsilon$, such that value iteration is terminated when $|V_{t+1}(s) - V_t(s)| < \epsilon$, then $\max_{s \in \mathcal{S}} | V_{t+1}(s) - V^*(s) | < 2\epsilon\gamma/(1-\gamma)$.
+Value iteration converges in polynomial time.
+
+\subsection{Partially Observable Markov Decision Processes}
+In many field operations, measurements that can be collected of an environment or the robot's state are only \emph{partial} observations.
+Partially-observable Markov decision processes\autocite{kaelbling1998planning} (POMDPs) extend MDPs to partially observable domains, defined as the tuple $(\mathcal{S}, \mathcal{A}, \mathcal{Z}, T, O, R, \gamma, b_0)$ where $\mathcal{S}, \mathcal{A}, R,$ and $\gamma$ are defined as previously defined, with:
+
+\begin{itemize}
+	\item $\mathcal{Z}$ is the space of all possible observations. May be finite or infinite (in the case of continuous functions).
+	\item $O : \mathcal{S} \times \mathcal{A} \to \mathcal{P}(\mathcal{Z})$ is the observation model, which represents the probability density of observation $z \in \mathcal{Z}$ after executing action $a \in \mathcal{A}$ from state $s \in \mathcal{S}$; $\mathbf{Pr}(O_t = z | \mathcal{S}_t = s, \mathcal{A}_t = a)$. This function can model imperfect sensing.
+	\item $b_0$ is the prior distribution over the initial state $\mathcal{S}_0$; $b_0 = \textbf{Pr}(\mathcal{S}_0 = s)$
+\end{itemize}
+
+In partially-observable domains, the state of the world is uncertain, and so that should mean that the decision process is no longer Markovian, since the optimal policy would no longer be dependent on the state.
+However, by making decisions based on the \emph{belief} over states rather than making decisions based on the current best estimate of the state, the Markov property can be restored, since the belief state summarizes all the historical observation and action history relevant for policy calculation.
+Just as in MDPs, the Bellman equation can be used to recursively quantify the value of belief $b_t = \mathcal{P}(S_t)$ over horizon-$h$ under policy $\pi: b_t \to a_t$ as: 
+\begin{equation}
+  V^{\pi}_h(b_t) = \mathbb{E}[R(s_t, \pi(b_t))] + \gamma \sum_{z \in \mathcal{Z}} V^{\pi}_{h-1}(b^{\pi(b_t), z}_{t+1}) \text{ }\textbf{Pr}(z \mid b_t, \pi(b_t)),
+  \label{eq:pomdp_value}
+\end{equation}
+\noindent where the expectation is taken over the current belief and $b^{\pi(b_t), z}_{t+1}$ is the updated belief after taking action $\pi(b_t)$ and observing $z \in \mathcal{Z}$.
+The optimal policy $\pi_h^*$ over horizon-$h$ is the maximizer of the value function over the space of possible policies $\Pi$: $\pi_h^* = \argmax_{\pi \in \Pi} V^{\pi}_h(b_t)$.
+
 
 % % In our formulation of the hydrothermal plume charting problem as a POMDP, our reward function is computed over the belief of the plume state, which is uncertain and represented probabilistically with \PHUMES. By its nature, a POMDP policy will balance exploration and exploitation, and so we define a simple ``exploitative'' reward function that directly encodes the desired scientific task. 
 % % Adaptive or online IPP techniques can make use of discrete state spaces \cite{Lim2016, Arora2017}, known metric maps \cite{singh2009nonmyopic, Jawaid2015}, unconstrained sensor placement \cite{Krause2008}, or nonmyopic sensor placement \cite{flaspohler2019information} in order to design trajectories through a potentially large state and vehicle space in order to gather useful observations. In this work, we optimize offline the placement of entire uniform coverage trajectories for a given deployment of \Sentry, and consider only a single deployment look-ahead at time of planning.
 
-% % In this work, we take an offline approach to informative path planning, and leverage the restriction of using uniform-coverage trajectory objects (e.g., lawnmowers) to relax the UCB reward function, setting $\beta$ to 0. This effectively creates a purely exploitative reward function, which is tempered by external restrictions to the set of actions the robot can take. Under a different set of action primitives or online decision-making, utilizing the full UCB reward, or any of the other typical probability measures, would be suitable. Moreover, the computation of these information measures is directly supported by the \PHUMES model class. 
+\subsection{Decision-making under Uncertainty}
+In general, \cref{eq:pomdp_value} is difficult or intractable to compute in large or continuous state and observation spaces\footnote{The same holds for large or continuous-valued MDPs.}.
+Thus, approximate solvers are necessary to recover the optimal policy for an agent to execute.
+In the most broad sense, a solver can be characterized as either being \emph{online} or \emph{offline}, which describes at what point in a mission a plan may be generated.
+
+\paragraph{Offline Planning}
+Offline planning approaches specify an execution pattern for an agent prior to a mission, which the agent then executes in open-loop control.
+Simplistic offline planners perform coverage or monitoring tasks\autocite{nikolos2003evolutionary,nam2016approach} in \emph{a priori} known metric environments.
+Reward functions like ``shortest path length'' or ``minimal energy expenditure'' are typical.
+Offline planning also refers to a system in which many potential plans or contingencies are computed prior to a mission, and during execution one of these plans is selected on-the-fly based on robot state\autocite{roa2012power}.
+Methods for computing offline plans can include formal optimization, action simulation and scoring (such as in Monte Carlo tree search, particle filters or reinforcement learning)\autocite{yu2021combo,Arora2017,raja2012optimal}, or classical search(e.g., probabilistic roadmaps)\autocite{karaman2011sampling,karaman2011anytime}.
+
+\paragraph{Online Planning}
+In contrast to offline planners, online planners are used ``in the loop'' for vehicle control during mission execution.
+Online planners may be fully closed-loop, wherein streaming measurements and observations have direct consequence on robot behavior.
+Generally, closed-loop planners are used for motion-control, in which obstacle avoidance, perturbation rejection, and navigation are core tasks\autocite{majumdar2013robust,esposito2002method}.
+Online planners can be either \emph{myopic}\autocite{vergassola2007infotaxis,edwards2005moth} or \emph{nonmyopic}\autocite{Arora2017,singh2009nonmyopic,Lim2016,meliou2007nonmyopic,kurniawati2008sarsop,somani2013despot,sunberg2018online,browne2012survey}, in reference to how far a horizon is considered in a plan in order to choose an action to take.
+
+\subsection{Information-Theoretic Rewards}
+In an MDP or POMDP, the reward function serves to encode the scientific objective of a mission. For strategic sample collection it is typically useful to consider the \emph{information content} of potential observations in order to elicit \emph{explore-exploit} behaviors of the robot. Explore-exploit is a paradigm that describes the phenomenon of \emph{exploring} when little knowledge is held about an environment, and then transitioning to \emph{exploiting} collected knowledge in order to perform a task. Getting the balance right between exploration and exploitation is a perennial challenge in adaptive sampling, and the choice of the reward function can have further implications for the performance of a planning scheme. For instance, submodular reward functions (i.e., diminishing returns) allow for even greedy-myopic online strategies to have bounded performance\autocite{horel2016notes}. 
+
+Several fields of research have proposed information measures for policy development in robotic sampling tasks. Optimal experimental design\autocite{fedorov2013theory} proposes several ``criteria'' for variance reduction over inference targets:
+
+\begin{itemize}
+	\item $A$-optimal: Minimizes the trace of the inverse covariance matrix\footnote{e.g.,~\cite{sim2005global,kollar2008trajectory,carrillo2015monotonicity}}
+	\item $D$-optimal: Minimizes the determinant of the covariance matrix\footnote{e.g.,~\cite{kollar2008trajectory,carrillo2015monotonicity,joshi2008sensor,joshi2008sensor}}
+	\item $E$-optimal: Maximizes the smallest eigenvalue of the covariance matrix\footnote{e.g.,~\cite{carrillo2015monotonicity}}
+	\item $V$-optimal: Minimize the average prediction variance\footnote{e.g.,~\cite{cohn1994neural}}
+\end{itemize}
+
+Optimal experimental design additionally suggests several ``soft'' measures of information content, including Shannon's entropy\autocite{shannon1998mathematical}, conditional entropy, and mutual information all of which have been widely used in robotic simultaneous localization and mapping (SLAM)\autocite{burgard1997active, carrillo2015autonomous, bourgault2002information, valencia2018active}, sensor placement\autocite{guestrin2005near, papadimitriou2000entropy, Krause2008}, and optimal navigation\autocite{daniel2012hierarchical}.
+
+In Bayesian optimization contexts, several information-theoretic rewards are commonly used:
+
+\begin{itemize}
+    \item Upper-Confidence Bound (UCB)\autocite{agrawal1995sample,auer2002using,snoek2012practical} of the form $R_{\text{UCB}} = \mu(\mathbf{x}) + \sqrt{\beta}\sigma(\mathbf{x})$ which is the sum of predictive mean $\mu$ and variance $\sigma$ at queries $\mathbf{x}$. UCB is submodular\autocite{nemhauser1978analysis}.
+    \item Probability of Improvement (PI)\autocite{snoek2012practical,kushner1964new}; a probability measure of whether a query $\mathbf{x}$ will be better than the current best measurement $\mathbf{x}^*$.
+    \item Expected Improvement (EI)\autocite{snoek2012practical,jones1998efficient}; a measure of how much better a proposed query $\mathbf{x}$ will be compared to the current best measurement $\mathbf{x}^*$.
+    \item Predictive Entropy Search (PES)\autocite{hennig2012entropy,hernandez2014predictive}; a measure of the conditional entropy between a query $\mathbf{x}$ and a predicted optimizer of a distribution $f(\cdot)$, $\mathbf{x}^*$.
+\end{itemize} 
+
+UCB is particularly well-utilized in robotic sampling contexts because of it's submodularity property.
+\cite{Srinivas2012} provides a detailed analysis of UCB-based reward functions for use in environments represented by GPs, ultimately demonstrating a bound on \emph{regret} for some selection of belief, $\beta_t$.
+Regret is a general performance metric used to quantify the loss in reward from sub-optimal decisions made because the underlying function $f$ is unknown.
+For robotic and sensor-selection missions, \emph{no-regret} performance implies that as time approaches infinity the accumulated regret goes to 0, and is a popular way of proving useful convergence properties of an algorithm.
+UCB reward, and UCB variants have been shown to elicit no-regret properties in robotics and sensor selection problem\autocite{Sun2017,Srinivas2012,garivier2011kl}.
 
 
-% % \begin{itemize}
-% %     \item Upper-Confidence Bound (UCB) \cite{agrawal1995sample,auer2002using,snoek2012practical} of the form $R_{\text{UCB}} = \mu(\mathbf{x}) + \sqrt{\beta}\sigma(\mathbf{x})$ which is the sum of predictive mean $\mu$ and variance $\sigma$ at queries $\mathbf{x}$. UCB is submodular \cite{nemhauser1978analysis}.
-% %     \item Probability of Improvement (PI) \cite{snoek2012practical,kushner1964new}; a probability measure of whether a query $\mathbf{x}$ will be better than the current best measurement $\mathbf{x}*$.
-% %     \item Expected Improvement (EI) \cite{snoek2012practical,jones1998efficient}; a measure of how much better a proposed query $\mathbf{x}$ will be compared to the current best measurement $\mathbf{x}*$.
-% %     \item Predictive Entropy Search (PES) \cite{hennig2012entropy,hernandez2014predictive}; a measure of the conditional entropy between a query $\mathbf{x}$ and a predicted optimizer of a distribution $f(\cdot)$, $\mathbf{x}*$.
-% % \end{itemize} 
+%%%%
+% Plume Hunting
+%%%%%
+\section{Vent Prospecting, Odor Localization, and Front Tracking}
+In robotics, \emph{plume hunting} has been equivalently styled as vent prospecting, odor mapping, odor localization, source localization, and source seeking. In these works, it is generally assumed that the source \emph{location} is unknown, and through partial observations of emitted gas/odor/plume, the source can be physically discovered (as in, the robot can find and navigate to it) using techniques that can be divided broadly into biologically-inspired heuristic search\footnote{e.g.,~\cite{reddy2022olfactory,chen2019odor}} and adaptive informative path planning\footnote{e.g.,~\cite{salam2019adaptive, jakuba2007stochastic}}.
 
-% % \subsection{Plume Hunting with Robots}
-% % \label{sec:plume_hunting}
-% % In the robotics literature, plume hunting has been equivalently styled as odor mapping, odor localization, source localization, and source seeking. In a large portion of these works, it is assumed that the source \emph{location} is unknown, and through partial observations of emitted gas/odor/plume, the source can be discovered using techniques that can be divided broadly into biologically-inspired heuristic search (e.g., \cite{reddy2022olfactory,chen2019odor}) or adaptive informative path planning (e.g., \cite{salam2019adaptive, jakuba2007stochastic}). Biologically-inspired or heuristic techniques draw (varying-levels of) inspiration from animal or insect behavior in olfactory settings. Such techniques typically include gradient-based algorithms like chemotaxis \cite{morse1998robust}, or bio-inspired algorithms that directly mimic a particular animal \cite{edwards2001representing}. These techniques are typically reactive and myopic, although they have been demonstrated to be relatively robust in open-world settings. In contrast, adaptive informative path planning can be nonmyopic, and typically attempts to embed knowledge (either heuristically or rigorously) about flow-fields (i.e., advection and diffusion) to assist in plume localization. Such techniques live on a spectrum, from algorithms that resemble biologically-inspired techniques like infotaxis \cite{vergassola2007infotaxis} to methods that use model order reduction techniques (like proper orthogonal decomposition) to encode complex numerical models (like the Navier-Stokes equations) and elucidate spatiotemporal structures in complex data \cite{peng2014dynamic}. Some examples of specifically localizing hydrothermal plumes are presented in \cite{jakuba2007stochastic,branch2020demonstration,wang20203,ferri2010novel}.
+Biologically-inspired or heuristic techniques draw (varying-levels of) inspiration from animal or insect behavior in olfactory settings. Such techniques typically include gradient-based algorithms like chemotaxis\autocite{morse1998robust}, or bio-inspired algorithms that directly mimic a particular animal\autocite{edwards2001representing,grasso2000biomimetic}. These techniques are typically reactive and myopic, although they have been demonstrated to be relatively robust in open-world settings. In contrast, adaptive informative path planning can be nonmyopic, and typically attempts to embed knowledge (either heuristically or rigorously) about flow-fields (i.e., advection and diffusion) to assist in plume localization. Such techniques live on a spectrum, from algorithms that resemble biologically-inspired methods, like infotaxis\autocite{vergassola2007infotaxis}, to methods that use model order reduction techniques (like POD) to encode complex numerical models and elucidate spatiotemporal structures in complex data\autocite{peng2014dynamic,salam2019adaptive}. 
 
-% % In contrast to vent or source localization work, this paper aims to maximize samples collected throughout the structure of a moving plume in an offline information-gathering setting. Indeed, the plume source is generally known. Work that has used robots to map or chart plume-like structures has been presented as the ``front-tracking'' problem \cite{li2014multi}. In this problem, two water masses converge (say, at a river output into a bay), and the goal is to use a robotic vehicle to track the edge or intersection of these water masses using online adaptivity. With respect to tasking robots to stay within a particular water mass, most work has been conducted with multi-robot systems sharing distributed observations, and which identify key ``neighborhoods'' for further examination \cite{chen2019odor}. The importance of online decision-making in these schemes is essential to their efficacy; as far as these authors are aware, this paper is the first to attempt water mass tracking within an offline optimization strategy with a single agent.
+For hydrothermal vent localization in the deep sea, there have been, to be best of my knowledge, no fully autonomous studies performed. Three field studies have been used, however, to demonstrate autonomy tools and planners in simulation or post-expedition analysis. In \cite{jakuba2007stochastic}, a probabilitic occupancy-grid representation is formulated which uses observations of opportunity from a deep-sea vehicle to estimate the location of a vent. These maps were not tied into the autonomy in anyway during these trials. In a follow-up study presented in~\cite{ferri2010novel}, an adaptive surveying strategy was tested using data gathered by a deep sea vehicle (the autonomy was not tested at sea, but verified with field data), leveraging a similar occupancy style representation and allowing a vehicle to place surveys strategically for information gathering. And in~\cite{branch2020demonstration}, a direct extension of Ferri et al., simulated hydrothermal expressions from the Juan de Fuca ridge were provided to a glider swimming in the Chesapeake Bay for hardware in the loop tests of a planning methodology that allowed the glider to selectively place finer and finer resolution surveys over an estimated vent location. In full simulation, works using adaptive heuristic planners\autocite{wang20203,pang2010plume} have primarily dominated.
 
-% \subsection{Bayesian Inference in POMDP Solvers}
-% \label{sec:bayesian_inference}
-% We define the hydrothermal plume charting problem as a POMDP and therefore need to select a belief representation which encodes the history of a robot's observations and the implications of those observations (and remaining uncertainty) over the explorable space. In approximate POMDP solvers, the choice of belief representation over the partially-observable state is critical for computing rewards and simulating possible actions and observations in decision-making. \PHUMES uses a Bayesian formulation, enabling inference over sets of unknown parameters informed by observations. A Bayesian inference problem takes the following general form: let $Z = \{z_0,...,z_{n-1}\}$ be a set of $n$ observed data points (possibly vector-valued), $X$ be the set of parameters that describe the data's distribution such that $z \sim \Pi(z | X)$, and $\alpha$ is a hyperparameter on the parameter distribution such that $X \sim \Pi(X | \alpha)$. Then the posterior distribution of the parameters given the data can be expressed as:
+A compliment to the vent localization problem is the \emph{front tracking} problem\autocite{chen2019odor}, which tasks an agent with collecting samples at a (possibly dynamic) boundary between two or more phenomena. An example of a front could be at the location a river dumps freshwater into a salty bay\autocite{mcclimans1988estuarine}, or at the edge of a warm core ring, which are spun out by the Gulf Stream\autocite{cushman1985oscillations}. Front tracking algorithms are largely focused on classifying observations as being part of one or another water mass and using an estimated (or model-based) gradient between the classes to adapt robot behavior to gather samples at the boundary. Examples using underwater vehicles to target salinity gradients in the surface ocean\autocite{belkin2018new} and teams of underwater vehicles and surface vehicles to track ocean fronts\autocite{mccammon2021ocean} are two field-deployed examples, while several simulated studies looking at this problem with respect to chemical plumes\autocite{wang2019dynamic,li2014multi} and river plumes\autocite{teixeira20213d} have been demonstrated. While deep ocean plumes have been a motivating context for some studies, front tracking the deep ocean has not yet been demonstrated.
 
-% \begin{equation}
-%     \Pi(X | Z; \alpha) = \frac{\Pi(X, Z; \alpha)}{\Pi(Z;\alpha)} \propto \Pi(Z | X; \alpha)\Pi(X; \alpha)
-% \end{equation}
-
-% Practically, computing the posterior distribution exactly is computationally expensive or intractable due to the potentially large parameter space described by $X$, or complex and possibly hierarchical structure present between the observations and the parameter space. For the plume-charting problem, the Bayesian inference problem is posed as uncovering the state $\Ss$ defined with parameter vectors $\x_p, \x_c,$ and $\x_r$ from observations $\Zz$ collected according to observation model $O$. In this instance, the observations, which are filtered binary measurements at particular locations, are related to the plume parameters $\x_p$ and crossflow parameters $\x_c$ via the complex spatiotemporal dynamics of plume physics, which can be represented as a systems of partial differential equations (PDEs). 
-
-% To approximately solve Bayesian inference problems, several techniques can be employed, such as variational inference \citep{wainwright2002environmental}, Monte Carlo (MC) sampling \citep{mackay1998introduction}, or non-parametric model formulations \citep{Rasmussen2004}. Gaussian processes (GPs) are one form of non-parametric Bayesian model which has enjoyed considerable adoption in IPP (e.g., \cite{flaspohler2019information, guestrin2005near, Krause2008, Srinivas2012, luo2018adaptive, ouyang2014multi, wan2017reduced, ma2017informative, Marchant2014a}). However challenges remain in adopting GPs for nonstationary or otherwise complex (spatiotemporal) distributions as state-of-the-art kernels (e.g., \cite{singh2010modeling, garg2012learning, chen2022ak, raissi2018numerical}) may be difficult to train with the limited data available in a real field setting. In contrast, MC methods are particularly well suited for the Bayesian inference formulation we have posed for hydrothermal charting in \PHUMES, as distributions over a small set of physically-meaningful quantities can be easily defined and embedded in a numerical simulator during the sampling procedure. MC methods estimate the true posterior by drawing samples from a proposal density and evaluating those samples with respect to the posterior. In large, complex systems, it is difficult to define a single density that well-describes a target posterior, and so Markov chain MC (MCMC) methods draw samples from a proposal density which is conditioned on the previous sample drawn, and establishing an acceptance criteria to transition between states \cite{mackay1998introduction, green1995reversible, neal2011mcmc}. Since each new state relies on the density of the previous state in MCMC samplers, a ``burn-in'' period, in which a potentially large number of samples are drawn, is used before virtually independent samples are generated. MC methods will converge to the true estimator of the posterior for large numbers of samples \cite{mackay1998introduction}. In this paper, we make use of an MCMC procedure within our \PHUMES algorithm.
+It is worth noting that there are two barriers that have contributed to the difficulty of performing autonomous studies in the deep sea for vent localization and front tracking. One is related strongly to the challenge of non-agency in most depth-capable AUVs; indeed, all of the field work discussed in this section with active autonomy was conducted using small gliders with a depth rating of no more than \SI{100}{\meter}. The mismatch between the actual autonomous capabilities of the science fleet and the autonomy frameworks being developed is not necessarily bad, especially in thinking about the next decades of oceanographic research and the development of the science fleet in that time, but it does have an impact of the science that can be performed today. The second barrier is the difficulty of accessing the deep sea for non-oceanographers/scientists given how precious ship and AUV resources are, and the community knowledge necessary to run successful field operations on a ship. Growing interest and ability to invite remote-scientists to sea (i.e., scientists can participate actively in research cruises without being on the ship through high-bandwidth internet links) may extend access to a broader set of researchers in the future, that could possibly enable more opportunities for deploying deep-sea autonomy in the way presented in this thesis.  
 
 
-% % As the plume-charting problem is an informative path planning (IPP) task, it is worth noting that nonparametric Bayesian models like Gaussian Processes (GPs) \cite{browne2012survey} have enjoyed considerable adoption in IPP (e.g., \cite{flaspohler2019information, guestrin2005near, Krause2008, Srinivas2012, luo2018adaptive, ouyang2014multi, wan2017reduced, ma2017informative, Marchant2014a}) to serve as the belief representation in POMDPs. GPs are attractive because they are relatively simply defined using a mean and covariance function (the latter of which encodes the ``relatedness'' of collected data with the inference target) and have a closed-form analytical update procedure. Unfortunately, challenges remain in adopting GPs for nonstationary and otherwise complex distributions present in realistic spatiotemporal environments. Recent work embedding numerical models into GP covariance kernels \cite{raissi2018numerical}, formulating general purpose nonstationary kernels \cite{singh2010modeling,garg2012learning, chen2022ak}, or utilizing learned latent spaces \cite{wilson2016deep} are promising areas for future adoption of GPs in spatiotemporal expeditionary IPP.
+%%%%%
+% Hydrothermal Plumes
+%%%%%
+\section{Hydrothermal Plumes}
+Understanding the physics of plumes is fundamental to interpreting observations gathered during a deep sea geochemical survey. Hydrothermal plumes are typically characterized as buoyancy-driven water masses. On formation at a vent site, emitted fluids are significantly less dense than background seawater (by virtue of being super-heated, with some add-on effects by changes in chemical composition). The less dense water mass rises rapidly in the water column, forming a buoyant stem. As a rule of thumb, a buoyant stem grows in diameter about \SI{1}{\meter} for every \SI{10}{\meter} vertically traveled. Due to rapid cooling, turbulent mixing, and the natural stratification of ocean water, vent-derived fluids will reach a point of neutral-buoyancy with the background seawater. At this point, the plume forms a nonbuoyant or neutrally buoyant layer which spreads out across the isopycnal that describes the ocean layer of equivalent density. In the Atlantic basin, plume rise height is typically expected to be approximately 300-\SI{350}{\meter}; in the Pacific basin, this is 150-\SI{200}{\meter}\autocite{speer1989model}. 
+
+Generalized plume models which have been commonly incorporated in robotic source seeking literature include the Gaussian plume model\autocite{green1980analytic} and the Gaussian puff model\autocite{ludwig1977simplification}. These models primarily describe the dispersion envelope of aerosols released as a plume from a coherent source in the atmosphere, modeling the concentration of those aerosols directly as a Gaussian around a plume centerline, which describes the path of the plume in space. These models have largely been used to simulate ground pollution characteristics of smokestack-like sources in open, unstratified environments, and typically assume that the advective crossflow dominates plume movement. In the deep sea, stratified environments are the norm, and buoyancy forces are the primary advective force of plume fluids\footnote{Note that in this work the Boussinesq approximation~(\cite{van2010universal}) is assumed} with relatively weak crossflow. These non-trivial differences encourage turning to domain-specific plume models.
+
+Hydrothermal plumes have been mathematically codified perhaps most famously by~\cite{morton1956turbulent} (MTT) as a system of conservative equations (here for a stratified fluid) in cylindrical coordinates $(x, r)$ with the $x$-axis vertical with the vent source at the origin:
+
+\begin{equation}
+    \text{Volume: } \quad \frac{d}{dx}(b^2 u) = 2 b \alpha u
+\end{equation}
+\begin{equation}
+    \text{Momentum: } \quad \frac{d}{dx}(b^2 u^2) = 2 b^2 g\frac{\rho_o - \rho}{\rho_1} 
+\end{equation}
+\begin{equation}
+    \text{Density deficiency: } \quad \frac{d}{dx}\large(b^2 u g \frac{\rho_o - \rho}{\rho_1}\large) = 2 b^2 u \frac{g}{\rho_1}\frac{d\rho_o}{dx}
+\end{equation}
+
+\noindent where $\alpha$ is a proportionality coefficient which represents gross mixing (or entrainment) that occurs at the edge of a plume, $b = b(x)$ is the (symmetric) radius of the plume, $\rho = \rho(x, r)$ is density inside the plume, $\rho_o=\rho_o(x)$ is density outside of the plume, $\rho_1$ is some reference density such that $\rho_o(0) = \rho_1$, $g$ is acceleration due to gravity, and $u = u(x,r)$ is vertical velocity. These equations have been equivalently expressed in terms of mass, salt, heat, and momentum conservation by~\cite{speer1989model} which usefully decomposes density into components of salinity and temperature that can be directly observed by scientific instruments.
+
+Variations on the time-averaged MTT model, for instance models which consider crossflow\autocite{tohidi2016highly}, are numerous. In addition to time-averaged models, sophisticated simulators of hydrothermal plumes which model time-varying turbulent dynamics are available\autocite{lavelle2013turbulent}. These models also use conservation properties (momentum, buoyancy, volume), but couch the quantities relative to fluid flow (Navier-Stokes), flow-field non-divergence, boundary reflections, and multiple scales of mixing (viscous, turbulent, diffusive). Solving a highly resolved model is generally computationally expensive; for relatively modest simulated environments of tens of meters on each volumetric axis, several days of computation of a high-performance computing node may yield only a few hours of simulation.
+
+\subsection{Tracers and Instrumentation}
+Physically manifested hydrothermal plumes are turbulent, variably warm, and contain particulates and chemicals.
+As a plume rises and advects, it entrains (mixes) background seawater, diluting a plume expression several orders of magnitude from the originating vent.
+To identify a plume from observations, consideration of how different \emph{tracers} may manifest as a plume evolves is important.
+Tracers can be either conservative or non-conservative. 
+Conservative tracers are only impacted by physical advection and diffusion; non-conservative tracers can additionally react, decay, or be consumed in the water column by other processes.
+
+Temperature and salinity are convenient conservative tracers because standard oceanographic equipment can directly observe them (e.g., with a CTD probe).
+A challenge with interpreting temperature and salinity, however, is that an ocean basin is stratified, and this stratification must be considered when attempting to identify anomalous water masses. For instance, in the Pacific ocean, neutrally-buoyant plume intrusions tend to be relatively warm compared to ambient water at the same density, whereas intrusions in the Atlantic tend to be cold\autocite{speer1989model}.
+
+Chemistry is generally a non-conservative tracer, although the rate of decay or reaction can vary significantly for a given environment and chemical species. Methane is an energetic compound, readily consumed (oxidized) by e.g., microbes\autocite{petersen2009methanotrophic}. Oxygen is generally depleted in hydrothermal fluids, and can be produced and consumed in the deep ocean by microbial activities\autocite{johnson1986situ,smith1985maerozooplankton}. Turbidity, although closely related to chemistry distributions in a hydrothermal plume, can be treated as a conservative tracer. Oxidation reduction-potential (ORP) a measure of reactivity of a water species, or equivalently the relative ``age'' of a water sample, can similarly be treated as though it were a conservative measurement.
+
+Complicating measuring tracers in the deep ocean is the mechanism of the oceanographic equipment that is available. While CTD, ORP, and turbidity measurements can be considered nearly instantaneous, most chemical sensors have response time properties that ought to be considered. For instance, \emph{in situ} methane sensors for the deep sea typically use passive or active equilibriation over a membrane to separate gaseous species from water samples for analysis via laser spectrometer. This process can take minutes to hours to reach a steady state, which is untenable for a moving AUV and a turbulent plume. Often, time-correction is necessary\autocite{bittig2018oxygen} which projects a ``true'' measurement given laboratory (or field) sensor characterization for any given observation. This is important to consider for real-time or post-mission analysis of chemistry data, as these measurements may not yield absolute concentration estimates that can be trivially accepted. This highlights the importance of close collaboration with science party members with familiarity on the working principles of their sensors to enable reasonable (practical-time) analysis of \emph{in situ} analysis to enable informed mission planning at sea. 
 
 
-
-% \subsection{Buoyant Plume Physics}
-% \label{sec:plume_models}
-% % \VP{I currently write out the equations that I think are most important to have about plume models, then nod to both more complicated and more generalized models. Is that the right balance? Should I more fully present each of the more complicated or more generalized models?}
-% Understanding the physics of plumes is fundamental to interpreting observations gathered during an AUV \Sentry deployment and using them to quickly learn and improve a forward simulation of plume. Hydrothermal plumes in the deep sea are typically characterized as buoyancy-driven water masses. On formation at a vent site, emitted fluids are significantly less dense than background seawater (by virtue of being super-heated, with some add-on effects by changes in chemical composition). This less dense water mass rises rapidly in the water column, forming a buoyant stem. As a rule of thumb, a buoyant stem grows in diameter about \SI{1}{\meter} for every \SI{10}{\meter} vertically travelled. Due to rapid cooling, turbulent mixing, and the natural stratification of ocean water, vent-derived fluids will reach a point of neutral-buoyancy with the background seawater. At this point, the plume forms a nonbuoyant or neutrally buoyant layer which spreads out across the isopycnal that describes the ocean layer of equivalent density. In the Atlantic basin, plume rise height is typically expected to be approximately 300-\SI{350}{\meter}; in the Pacific basin, this is 150-\SI{200}{\meter} \citep{speer1989model}. 
-
-% Generalized plume models which have been commonly incorporated in robotic source seeking literature include the Gaussian plume model \citep{green1980analytic} and the Gaussian puff model \citep{ludwig1977simplification}. These models primarily describe the dispersion envelope of aerosols released as a plume from a coherent source in the atmosphere, modeling the concentration of those aerosols directly as a Gaussian around a plume centerline describing the path of the plume in space. These models have largely been used to model ground pollution characteristics of smokestack-like sources in open, unstratified environments, and typically assume that the advective crossflow dominates plume movement. In the deep sea, stratified environments are the norm, and buoyancy forces are the primary advective force of plume fluids; however the ``Gaussian assumption'' is widely accepted by physical oceanographers, and we utilize this assumption within our \PHUMES framework. Specifically, we use deep-sea suitable formulations of plume centerline dynamics, and apply the Gaussian assumption to the terms that describe space-averaged fluid characteristics. This yields numerical descriptions of buoyant plume ``envelopes'' in which plume-derived fluid masses, on-average, will be observable under consistent environmental conditions in time. 
-
-% The buoyant-stem and neutrally-buoyant layer model of a hydrothermal plume has been mathematically codified perhaps most famously by \cite{morton1956turbulent} as a system of conservative equations (here for a stratified fluid) in cylindrical coordinates $(x, r)$ with the $x$-axis vertical with the vent source at the origin:
-
-% \begin{equation}
-%     \text{Volume: } \quad \frac{d}{dx}(b^2 u) = 2 b \alpha u
-% \end{equation}
-% \begin{equation}
-%     \text{Momentum: } \quad \frac{d}{dx}(b^2 u^2) = 2 b^2 g\frac{\rho_o - \rho}{\rho_1} 
-% \end{equation}
-% \begin{equation}
-%     \text{Density deficiency: } \quad \frac{d}{dx}\large(b^2 u g \frac{\rho_o - \rho}{\rho_1}\large) = 2 b^2 u \frac{g}{\rho_1}\frac{d\rho_o}{dx}
-% \end{equation}
-
-% where $\alpha$ is a proportionality coefficient which represents gross mixing (or entrainment) that occurs at the edge of a plume, $b = b(x)$ is the (symmetric) radius of the plume, $\rho = \rho(x, r)$ is density inside the plume, $\rho_o=\rho_o(x)$ is density outside of the plume, $\rho_1$ is some reference density such that $\rho_o(0) = \rho_1$, $g$ is acceleration due to gravity, and $u = u(x,r)$ is vertical velocity. These equations have been equivalently expressed in terms of mass, salt, heat, and momentum conservation by \cite{speer1989model} which usefully decomposes density into components of salinity and temperature that can be directly observed by scientific instruments.
-
-% In most environments, including the one we study in this article, advective crossflow is present. This crossflow ``bends'' a buoyant stem and reduces the effective rise height of the plume by introducing more aggressive mixing. To describe the plume shape under crossflow, we reformulate plume ascension through a weakly stratified water column into a modified cylindrical coordinate system as described in \cite{tohidi2016highly} and presented in \cref{sec:phumes}. 
-
-% Numerical models which describe instantaneous, complicated structure of plume phenomenon in time (e.g., \citealt{lavelle2013turbulent, xu2012deep}) have been developed which enhance these spatially-averaged models by directly modeling partial derivatives with respect to time, and incorporating additional dynamical models such as the Navier Stokes equations. Given the computational complexity of these models (on the order of a day on a high-performance computing node to compute a single instance of the evolution of a plume for a simulated hour), we instead focus on leveraging the comparatively simple and fast to compute idealized models described within \PHUMES. 
-% %We leave as future work opportunities to incorporate these more sophisticated models into expeditionary science missions and discuss further in \cref{sec:future}.
-
-% % \begin{equation}
-% %     \frac{dQ}{ds} = Q\sqrt{\frac{2(1+\lambda^2)}{M\lambda}}(\alpha|\frac{M}{Q} - U_a\cos\theta| + \beta|U_a\sin\theta|)
-% % \end{equation}
-% % \begin{equation}
-% %     \frac{dM}{ds} - U_a\cos\theta\frac{dQ}{ds} = \frac{FQ}{M}\sin\theta 
-% % \end{equation}
-% % \begin{equation}
-% %     U\sin\theta\frac{dQ}{ds} + M\frac{d\theta}{ds} = \frac{FQ}{M}\cos\theta
-% % \end{equation}
-% % \begin{equation}
-% %     \frac{dF}{ds} = -QN^2\sin\theta
-% % \end{equation}
-% % \begin{equation}
-% %     x_a = \int_0^s\cos\theta ds
-% % \end{equation}
-% % \begin{equation}
-% %     h_a = \int_0^s \sin\theta ds
-% % \end{equation}
-
-% % where $U_a = U_a(z)$ is the ambient crossflow velocity, $Q = Q(s,\theta)$ represents the plume specific volume flux, $M = M(s, \theta)$ is the specific momentum flux, $F = F(s, \theta)$ is specific buoyancy flux, $N$ is the Brunt-Vaisala frequency, $\lambda$ is the ratio of the minor and major axis that define the plume cross-sectional ellipse, $x_a$ and $h_a$ represents the Cartesian transform of $s$ and $\theta$ within the plume's frame of reference, and $\alpha$ and $\beta$ are vertical and horizontal entrainment coefficients. Indeed, the two key differences between this formulation and the formulation under no advective crossflow is the introduction of an additional mixing (entrainment) coefficient, and the tracking of volume, momentum, and buoyancy (density changes) fluxes horizontally under influence from this mixing. To convert abstract notions of buoyancy and momentum flux to directly observable/meaningful vent characteristics like vent area or fluid exit velocity, which are expressed naturally in the non-advective model, we can use the following relationships:
-
-% % \begin{equation}
-% %     Q_0 = \lambda u_0 \frac{A_0}{\pi}
-% % \end{equation}
-% % \begin{equation}
-% %     M_0 = Q_0 u_0
-% % \end{equation}
-% % \begin{equation}
-% %     F_0 = g10^{-4}(T-T_0)Q_0
-% % \end{equation}
-
-% % \noindent where $A_0$ is the vent area, $u_0$ is the initial fluid velocity leaving the vent, $T$ is the temperature of fluid at the vent, and $T_0$ is the temperature of ambient seawater at the depth of the vent (note that temperature is the dominant component of density, $\rho$, for deep sea hydrothermal plumes). Indeed, temperature, area, and exit velocity compose a sufficient set of parameters for representing the initial conditions of any particular plume and plume envelope calculation; these parameters, in addition to the mixing coefficients, form our set of $x_p$ in $\Ss$ in the plume-charting POMDP. $U_a$ and the global heading of the crossflow, $\Theta_a$ (not directly modeled in these equations), form the parameters in $x_c$ in $\Ss$.
-
-
-
-% %  This means that a vent of diameter \SI{0.5}{\meter} at the seafloor may produce a buoyant stem that only grows to a maximum of approximately \SI{30}{\meter} in horizontal size before reaching neutral buoyancy. With respect to the scale of typical survey areas of several thousand meters, hitting a buoyant stem by happenstance can be exceedingly difficult.
-
-
-% % \begin{itemize}
-% %     \item General: \begin{itemize}
-% %         \item chemotaxis/biological methods (source seeking)
-% %         \item POD methods (ultimately used in source-seeking)
-% %         \item informative GPs and IPP (Hitz, spatiotemporal kernels paper)
-% %     \end{itemize}
-% %     \item Hydrothermal plumes specifically: \begin{itemize}
-% %         \item infotaxis
-% %         \item informative occupancy grids (Jakuba)
-% %     \end{itemize}
-% %     \item What we're doing that's different: \begin{itemize}
-% %         \item we assume we know very little about anything (literally everything is invisible to us)
-% %         \item we assume we're not in a "steady-state" regime; our plume is moving in an unknown way on a global scale
-% %         \item we want to fly through all the parts of a plume, not just find the source (because that's actually the "solved" part of the problem at this point) \VP{honestly this is a HUGE difference. no one has an objective that is to map/track the plume. the forward prediction part of what we're doing is quite unique in the plume space}
-% %     \end{itemize}
-% % \end{itemize}
-
-% % Prior work in charting hydrothermalism has generally focused on source localization or discovery. Based on the magmatic budget hypothesis, hundreds of undiscovered vent sites are hypothesized to exist in the deep ocean \cite{beaulieu2015undiscovered} with implications for global nutrient and energy budgets, and novel ecosystems. Work conducted by [CITE] proposes methods for using autonomous underwater vehicle (AUV) surveys to estimate the location of a source by modeling upwind-downwind wafting effects. Still others propose biologically-inspired adaptive methods for using AUVs to trace wafting plume water to a source directly [CITE]. While vent discovery and characterization is a critical aspect of hydrothermal plume charting, little work has yet to examine how to study a plume \emph{in situ} given a known or hypothesized vent location. Hundreds of vents have been discovered and charted in the ocean, and some have been studied extensively at the seafloor. 
 
