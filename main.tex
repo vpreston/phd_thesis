@@ -31,7 +31,10 @@
   \include{chapters/abstract}
   % \include{chapter/forward}
   % \include{chapters/land_ack}
+  \begingroup
+  \setstretch{1.0}
   \include{chapters/ack}
+  \endgroup
 
   \tableofcontents
   \listoffigures
@@ -45,7 +48,7 @@
   \include{chapters/phortex}  % PHUMES + PHORTEX formulation
   \include{chapters/fieldresults}  % results in field performance + science
   \include{chapters/pikl}  % meaty future work section
-  \include{chapters/discussion}  % philosophical statements
+  % \include{chapters/discussion}  % philosophical statements
   \include{chapters/conclusion}  % concluding remarks
 
 \appendix
@@ -60,11 +63,14 @@
     \let\clearpage\relax
     \glsaddall
     \printglossary[type=\acronymtype]
-    \newpage
-    \printglossary
+    % \newpage
+    % \printglossary
   \endgroup
 
   \printindex
+  \begingroup
+  \setstretch{1.0}
   \printbibliography
+  \endgroup
 
 \end{document}

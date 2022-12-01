@@ -87,6 +87,9 @@
 % Otherwise, only the counter will be printed.
 \captionsetup{subrefformat=parens}
 
+\RequirePackage{rotating} % to allow full page figures
+\RequirePackage{pdfpages} % to allow insert of multiple pdf pages
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Glossaries
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -247,7 +250,7 @@
 
 % Large number for chapter
 \renewcommand*{\chapterformat}{%
-  \fontsize{50}{55}\selectfont\thechapter\autodot\enskip
+  \fontsize{40}{45}\selectfont\thechapter\autodot\enskip
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -289,7 +292,7 @@
   unicode,
   pdftex,
   pdfauthor={Victoria Preston},
-  pdftitle={YOU TITLE},
+  pdftitle={Perceive, Predict, and Plan},
   pdfkeywords={YOUR KEYWORDS},
   pdfsubject={PhD Dissertation at the Massachusetts Institute of Technology and the Woods Hole Oceanographic Institution Joint Program in Oceanography/Applied Ocean Science & Engineering}
   ]{hyperref}
@@ -304,7 +307,7 @@
 % if present, will be initialized. DOIs and URLs will be preserved.
 
 \usepackage[%
-  autocite     = footnote,
+  autocite     = inline,
   backend      = biber,
   doi          = true,
   url          = false,
@@ -314,7 +317,7 @@
   uniquename   = false,
   hyperref     = true,
   sortcites    = true,
-  citestyle    = authortitle-icomp,
+  citestyle    = authoryear,
   bibstyle     = nature,
   uniquelist   = false,
   ]{biblatex}

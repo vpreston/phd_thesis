@@ -234,7 +234,7 @@ We can also look at how convergence may change for longer chains. In an exemplar
 \end{figure}
 
 \section{Code Availability}
-\td{Might be nice to link to the code here and have some brief documentation on how to use it.}
+\PHUMES and \PHORTEX will be available through the Expeditionary Robotics organization on GitHub, \url{https://github.com/expeditionary-robotics}.
 
 
 %%%%%%%%%%%%%%%%%%%%%
@@ -246,10 +246,19 @@ We can also look at how convergence may change for longer chains. In an exemplar
 \td{Add the continuous-valued version of the polar maps, time plots.}
 
 \section{Acoustically Shared Science Data}
-\td{Plots of how the science monitor would look compared to the real signal.}
+During the cruise, a custom live-plotter for acoustically transmitted oceanographic sensing equipment from AUV \Sentry was developed. The open source code for this plotter can be accessed at \url{https://github.com/expeditionary-robotics/auv_listener}. While acoustically transmitted data is severely sub-sampled, the plots can be useful for showing general trends. Here, an example of the data that was transmitted by \Sentry and the absolute data is shown in \cref{fig:app:field:plotter}.
 
-\section{Field Report}
-\td{Put a shortened copy of the field report from the cruise in.}
+% \begin{figure}[h]
+%     \centering
+%     \includegraphics[width=1\columnwidth]{}
+%     \caption{}
+%     \label{fig:app:field:plotter}
+% \end{figure}
+
+\section{Autonomy Field Report}
+During RR2107, every science team generated a field report of activities as a reference for post-cruise analysis. While much of the report by the autonomy team on the RR2107 has been included throughout the main thesis body, the report as it was generated on the ship is included here for completeness. 
+
+\includepdf[pages=-,width=1.2\textwidth,pagecommand={}]{appendix/prestonflaspohler_report.pdf}
 
 \section{Code and Data Availability}
-\td{Might be nice to link to the processing code here, and have some brief documentation on it.}
+Rosette data can be found in the Rolling Deck to Repository (R2R) at \url{https://doi.org/10.7284/909325}. Data analysis tools used for processing \Sentry data are available on Github at \url{https://doi.org/10.5281/zenodo.6789105}. \Sentry, ROV \emph{JASON}, and tiltmeter data will be made available at a future date. Please contact the author with questions.
