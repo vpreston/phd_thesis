@@ -75,10 +75,15 @@ Weights are assigned to each sensor based on their individual reliability for id
         Quantity & Positive Plume Detection Criteria & Weight  \\
         \hline
         Salinity & Detrended practical salinity outside 3 standard deviations of the entire time series & 1 \\
+        \hline
         Temperature & Detrended temperatures above the 75th percentile of entire time series & 2 \\
+        \hline
         ORP & Detections less than -0.005 & 2 \\
+        \hline
         OBS & Optical attenuation above the 75th percentile of entire time series & 2 \\
+        \hline
         Oxygen & Detrended concentrations outside one-hour rolling computation of 3 standard deviations & 1 \\
+        \hline
         Methane & Normalized concentration above 0.3 & 2
     \end{tabular}
     \caption[Instruments on AUV \Sentry and the criteria used to identify plume fluids for each instrument.]{\textbf{Instruments on AUV \Sentry and the criteria used to identify plume fluids for each instrument.} The weight is used to indicate relative trustworthiness of a plume detection for each sensor, and is used in a corroboration scheme that sums detections across sensors in order to make a final determination on whether an observation location contained a parcel of plume fluid or consisted of background seawater. Detrended data removes depth-related cross-sensitivity from the measurements; for example, temperature is stratified in the deep ocean, so to ignore the impacts of depth changes in the data stream, those effects are removed by normalizing the data with respect to depth.}
@@ -87,9 +92,9 @@ Weights are assigned to each sensor based on their individual reliability for id
 
 \begin{sidewaysfigure}
     \centering
-    \includegraphics[width=0.5\hsize]{figures/binary_example_time.png}
+    \includegraphics[width=0.45\linewidth]{figures/binary_example_time.png}
     \hspace{.05in}
-    \includegraphics[width=0.5\hsize]{figures/binary_example_detections.png}
+    \includegraphics[width=0.45\linewidth]{figures/binary_example_detections.png}
     \caption[Example time series (left) and associated detections (right) over the AUV \Sentry sensor suite.]{\textbf{Example time series (left) and associated detections (right) over the AUV \Sentry sensor suite.} Oxygen, temperature, and salinity measurements are detrended using a linear transformation fit to depth vs. value plots. The time series demonstrates two types of plume detections. The first are ``obvious detections'' in which most sensors register strong anomalies (this happened twice toward the end of the deployment) and are most strongly associated with buoyant-stem derived fluids. The second are ``persistent plume detections'' in which the robot traverses through water that is slightly more turbid, warm, or chemical-rich than background water over potentially long horizons (this happened early in the deployment and in the middle). Such detections are most strongly associated with neutrally-buoyant layers. The conservative corroboration detector successfully identifies both forms of plume expressions.}
     \label{fig:detection_example}
 \end{sidewaysfigure}
@@ -212,7 +217,7 @@ While there is no external ``ground-truth'' that can be used to evaluate the per
 \begin{figure}
     \centering
     \includegraphics[width=1\columnwidth]{figures/field_validation.png}
-    \caption[Validation of \PHUMES model trained at sea.]{\textbf{Validation of \PHUMES model trained at sea.} The nominal plume estimate from \PHUMES trained on at-sea data and \Sentry observations with vertical transects of turbidity from shipboard rosette are compared. The plume envelope is the average plume estimated by \PHUMES for a nominal crossflow of \SI{0.11}{\meter\per\second}. Vertical red lines mark \SI{100}{\meter} and \SI{600}{\meter} laterally from the originating vent, for which vertical CTD casts were conducted. The region that the model estimates containing the lowest plume intrusion in the water column is highlighted on the turbidity transects. There is agreement between the model estimate and the transect data on the location of this turbid layer.} 
+    \caption[Validation of \PHUMES model trained at sea.]{\textbf{Validation of PHUMES model trained at sea.} The nominal plume estimate from \PHUMES trained on at-sea data and \Sentry observations with vertical transects of turbidity from shipboard rosette are compared. The plume envelope is the average plume estimated by \PHUMES for a nominal crossflow of \SI{0.11}{\meter\per\second}. Vertical red lines mark \SI{100}{\meter} and \SI{600}{\meter} laterally from the originating vent, for which vertical CTD casts were conducted. The region that the model estimates containing the lowest plume intrusion in the water column is highlighted on the turbidity transects. There is agreement between the model estimate and the transect data on the location of this turbid layer.} 
     \label{fig:field_valid}
 \end{figure}
 

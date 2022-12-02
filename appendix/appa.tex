@@ -201,20 +201,20 @@ Ship-based and towed rosette data can be found in the Rolling Deck to Repository
 %%%%%%
 % Appendix B
 %%%%%%
-\chapter{\PHORTEX Algorithm Performance}
+\chapter{\PHORTEX Performance}
 \label{app:phortex}
 
-\section{Convergence Characteristics of Trajectory Optimizer}
+\section{Convergence of Trajectory Optimizer}
 The trajectory optimization scheme presented in \cref{sec:to} uses a gradient-based optimizer with trust-bounded constraints in order to set the parameters of a set of lawnmower trajectories. In general, this is a difficult optimization problem, as analytical gradients that map the defining parameters of a lawnmower trajectory (orientation, size, and location) are not available, and must be numerically approximated. Moreover, by defining trust constraints, jumping between minima could be made more difficult, as the approximated gradients may lead through unsafe (un-trusted) space. In practice, this meant that initializing each lawnmower in a chain to be near a ``good trajectory'' was important. In the case of charting hydrothermal plumes, a ``good'' trajectory would be one approximately aligned with the estimated crossflow. As \PHUMES provides complete access to this information, it is generally easy to seed the trajectories to be near a performant minima. This leads to relatively fast convergence of the optimizer for each element in the chain. In \cref{fig:phortex_chain} there is an example a snapshot along the path to convergence for each link in a chain visualized, and the convergence plot. As is evidenced in the plot, a long travel time between chains is accumulated; this is likely because ``flipping'' a trajectory to shorten this distance would be a prohibitively difficult step in the nonlinear, constrained space that the optimizer operates.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\columnwidth]{figures/phortex_iterations.png}
+    \includegraphics[width=0.7\columnwidth]{figures/phortex_iterations.png}
     \caption[\PHORTEX optimization performance]{Example snapshots of each link in a \PHORTEX trajectory from a \cref{chap:phortex} simulation trial, and their corresponding convergence plots. While trajectories show good agreement with the current function and size of a plume expression as modeled by \PHUMES, a long travel time between chains is accumulated; this is likely because ``flipping'' a trajectory to shorten this distance would be a prohibitively difficult step in the nonlinear, constrained space that the optimizer operates.}
     \label{fig:phortex_chain}
 \end{figure}
 
-\section{Chaining Characteristics of \PHUMES}
+\section{MCMC Chain Characteristics of \PHUMES}
 For computational reasons, it is typically not possible to run the chains for thousands of samples while in the field, and the chains must be arbitrarily cut short in order to generate a plan. For this reason, it is interesting to look at the chaining properties. For a simulation trial, as described in \cref{chap:phortex}, we show the chains and probability densities for each of vent area, vent fluid velocity, and entrainment coefficients in \cref{fig:phumes_sim_chain}. As evidenced by the multimodal area plot, we observe that the relationship between the parameters is complicated; in general, an inverse problem like the one we have posed for \PHUMES is a challenge to infer. What is promising however is that probability densities are being concentrated in areas that make sense (as observed by a mode at 0.8 for area), and that the \emph{combinations} of learned parameters are sensible --- a large area should be coupled with a slow or medium velocity; a high velocity should be paired with a small area --- based on the relationships between parameters and how they manifest in the ultimate shape of the plumes in the 3D Cartesian space.
 
 \begin{figure}[h!]
@@ -243,22 +243,54 @@ We can also look at how convergence may change for longer chains. In an exemplar
 \chapter{Guaymas Basin Field Results}
 
 \section{Instrument Data}
-\td{Add the continuous-valued version of the polar maps, time plots.}
+In the main body of the text, the binary detections are reported for each of four AUV \Sentry dives. Here, the continuous data is plotted on overhead polar charts for reference.
 
-\section{Acoustically Shared Science Data}
-During the cruise, a custom live-plotter for acoustically transmitted oceanographic sensing equipment from AUV \Sentry was developed. The open source code for this plotter can be accessed at \url{https://github.com/expeditionary-robotics/auv_listener}. While acoustically transmitted data is severely sub-sampled, the plots can be useful for showing general trends. Here, an example of the data that was transmitted by \Sentry and the absolute data is shown in \cref{fig:app:field:plotter}.
+\begin{sidewaysfigure}
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/app_sentry607_data.png}
+    \caption[AUV \Sentry dive 607 data.]{\textbf{AUV \Sentry dive 607 data.} The binary detections are plotted with methane value from the Pythia methane instrument (time-corrected and converted data to nM), turbidity, ORP, detrended oxygen, and detrended temperature.}
+    \label{fig:app:field:sentry607}
+\end{sidewaysfigure}
 
-% \begin{figure}[h]
-%     \centering
-%     \includegraphics[width=1\columnwidth]{}
-%     \caption{}
-%     \label{fig:app:field:plotter}
-% \end{figure}
 
+\begin{sidewaysfigure}
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/app_sentry608_data.png}
+    \caption[AUV \Sentry dive 608 data.]{\textbf{AUV \Sentry dive 608 data.} The binary detections are plotted with methane value from the Pythia methane instrument (time-corrected and converted data to nM), turbidity, ORP, detrended oxygen, and detrended temperature.}
+    \label{fig:app:field:sentry608}
+\end{sidewaysfigure}
+
+
+\begin{sidewaysfigure}
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/app_sentry610_data.png}
+    \caption[AUV \Sentry dive 610 data.]{\textbf{AUV \Sentry dive 610 data.} The binary detections are plotted with methane value from the Pythia methane instrument (time-corrected and converted data to nM), turbidity, ORP, detrended oxygen, and detrended temperature.}
+    \label{fig:app:field:sentry610}
+\end{sidewaysfigure}
+
+\begin{sidewaysfigure}
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/app_sentry611_data.png}
+    \caption[AUV \Sentry dive 611 data.]{\textbf{AUV \Sentry dive 611 data.} The binary detections are plotted with methane value from the SAGE methane instrument (time-corrected and converted data to nM), turbidity, ORP, detrended oxygen, and detrended temperature.}
+    \label{fig:app:field:sentry611}
+\end{sidewaysfigure}
+
+\newpage
+\section{Acoustically Broadcast Science Data}
+During the cruise, a custom live-plotter for acoustically transmitted oceanographic sensing equipment from AUV \Sentry was developed. The open source code for this plotter can be accessed at \url{https://github.com/expeditionary-robotics/auv_listener}. While acoustically transmitted data is severely sub-sampled, the plots can be useful for showing general trends. Here, an example of the data that was transmitted by \Sentry during dive 607 and the absolute data from that dive are shown in \cref{fig:app:field:plotter}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=1\columnwidth]{figures/acomms.png}
+    \caption[Acoustic versus logged OBS messages during AUV \Sentry dive 607]{\textbf{Acoustic versus logged OBS messages during AUV \Sentry dive 607.} Red points mark the acoustic messages that were transmitted over the acoustic \Sentry network, plotted, and logged to a shipside computer. Most of the gross structure of the OBS data stream was captured, potentially indicating that the acoustic messages, although severely subsampled, may be sufficient for real-time analysis of vehicle performance.}
+    \label{fig:app:field:plotter}
+\end{figure}
+
+\section{Code and Data Availability}
+Rosette data can be found in the Rolling Deck to Repository (R2R) at \url{https://doi.org/10.7284/909325}. Data analysis tools used for processing \Sentry data are available on Github at \url{https://doi.org/10.5281/zenodo.6789105}. \Sentry, ROV \emph{JASON}, and tiltmeter data will be made available at a future date. Please contact the author with questions.
+
+\newpage
 \section{Autonomy Field Report}
 During RR2107, every science team generated a field report of activities as a reference for post-cruise analysis. While much of the report by the autonomy team on the RR2107 has been included throughout the main thesis body, the report as it was generated on the ship is included here for completeness. 
 
 \includepdf[pages=-,width=1.2\textwidth,pagecommand={}]{appendix/prestonflaspohler_report.pdf}
-
-\section{Code and Data Availability}
-Rosette data can be found in the Rolling Deck to Repository (R2R) at \url{https://doi.org/10.7284/909325}. Data analysis tools used for processing \Sentry data are available on Github at \url{https://doi.org/10.5281/zenodo.6789105}. \Sentry, ROV \emph{JASON}, and tiltmeter data will be made available at a future date. Please contact the author with questions.
